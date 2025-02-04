@@ -9,46 +9,39 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private Tilemap floorTilemap;
     [SerializeField] private Tilemap decorTilemap;
 
-    // Start is called before the first frame update
-    void Start()
-    {
-        
-    }
+    [SerializeField] private GameObject movementSpinner;
+    [SerializeField] private SpriteRenderer spriteRenderer;
+
+    [SerializeField] private Vector3Int gridPosition;
+
+    private bool isFlipped;
 
     // Update is called once per frame
     void Update()
     {
-       if (Input.GetKeyDown("w"))
+       if (Input.GetKeyDown("space"))
         {
-           //  Move(0, 1);
-            Debug.Log("W key was pressed");
-        }
-       if (Input.GetKeyDown("a"))
-        {
-            Debug.Log("A key was pressed");
-        }
-       if (Input.GetKeyDown("s"))
-        {
-            Debug.Log("S key was pressed");
-        }
-       if (Input.GetKeyDown("d"))
-        {
-            Debug.Log("D key was pressed");
+            Debug.Log("Space is Pressed!");
+            MoveCharacter(movementSpinner.transform.position);
         }
     }
-
-    private void Move(Vector2 direction)
+        private void MoveCharacter(Vector2 spinnerPosition)
     {
-        if (CanMove(direction))
-            transform.position += (Vector3)direction;
+        if (CanMoveToCell(spinnerPosition))
+            transform.position = floorTilemap.GetCellCenterWorld(gridPosition);
     }
 
-    private bool CanMove(Vector2 direction)
+    private bool CanMoveToCell(Vector2 spinnerPosition)
     {
-        Vector3Int gridPosition = floorTilemap.WorldToCell(transform.position + (Vector3)direction);
+        gridPosition = floorTilemap.WorldToCell(spinnerPosition);
         if (!floorTilemap.HasTile(gridPosition) || decorTilemap.HasTile(gridPosition))
             return false;
         return true;
+    }
+
+    private void SpriteFlip()
+    {
+        spriteRenderer.flipX = isFlipped;
     }
 
 }
