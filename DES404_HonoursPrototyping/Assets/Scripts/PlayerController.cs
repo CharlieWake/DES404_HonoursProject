@@ -1,3 +1,4 @@
+using JetBrains.Annotations;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -8,24 +9,34 @@ public class PlayerController : MonoBehaviour
 
     [SerializeField] private Tilemap floorTilemap;
     [SerializeField] private Tilemap decorTilemap;
+    [SerializeField] private GameObject highlighter;
 
     [SerializeField] private GameObject movementSpinner;
     [SerializeField] private SpriteRenderer spriteRenderer;
 
-    [SerializeField] private Vector3Int gridPosition;
+    private Vector3Int gridPosition;
 
-    private bool isFlipped;
+    [SerializeField] private float spinSpeed;
 
     // Update is called once per frame
     void Update()
     {
-       if (Input.GetKeyDown("space"))
+        InputCheck();
+        RotateSpinner();
+        HighlightCheck(movementSpinner.transform.position);
+    }
+
+    
+    private void InputCheck()
+    {
+        if (Input.GetKeyDown("space"))
         {
-            Debug.Log("Space is Pressed!");
+            // Debug.Log("Button is Pressed!");
             MoveCharacter(movementSpinner.transform.position);
         }
     }
-        private void MoveCharacter(Vector2 spinnerPosition)
+
+    private void MoveCharacter(Vector2 spinnerPosition)
     {
         if (CanMoveToCell(spinnerPosition))
             transform.position = floorTilemap.GetCellCenterWorld(gridPosition);
@@ -39,9 +50,25 @@ public class PlayerController : MonoBehaviour
         return true;
     }
 
-    private void SpriteFlip()
+    private void RotateSpinner()
     {
-        spriteRenderer.flipX = isFlipped;
+        Vector2 rotatePoint;
+        Vector3 rotateAxis = new Vector3(0, 0, 1);
+        
+        rotatePoint = transform.position;
+        movementSpinner.transform.RotateAround(rotatePoint, rotateAxis, Time.deltaTime * spinSpeed);
     }
 
+    private void HighlightCheck(Vector2 spinnerPosition)
+    {
+        if (CanMoveToCell(spinnerPosition))
+        {
+            highlighter.transform.position = floorTilemap.GetCellCenterWorld(gridPosition);
+            highlighter.SetActive(true);            
+        }
+        else
+        {
+            highlighter.SetActive(false);
+        }
+    }
 }
