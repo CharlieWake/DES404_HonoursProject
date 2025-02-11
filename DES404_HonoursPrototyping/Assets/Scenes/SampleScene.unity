@@ -371,6 +371,10 @@ PrefabInstance:
       propertyPath: playerCharacter
       value: 
       objectReference: {fileID: 2034627451}
+    - target: {fileID: 2741828362048693730, guid: 28e5035b663db074882f1b6be2d28044, type: 3}
+      propertyPath: tilesMovedPerTurn
+      value: 3
+      objectReference: {fileID: 0}
     - target: {fileID: 8384323062002602673, guid: 28e5035b663db074882f1b6be2d28044, type: 3}
       propertyPath: gridManager
       value: 
@@ -558,9 +562,21 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 1286355236}
     - target: {fileID: 2741828362048693730, guid: 28e5035b663db074882f1b6be2d28044, type: 3}
+      propertyPath: tilesPerTurn
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 2741828362048693730, guid: 28e5035b663db074882f1b6be2d28044, type: 3}
+      propertyPath: movementSpeed
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2741828362048693730, guid: 28e5035b663db074882f1b6be2d28044, type: 3}
       propertyPath: playerCharacter
       value: 
       objectReference: {fileID: 2034627451}
+    - target: {fileID: 2741828362048693730, guid: 28e5035b663db074882f1b6be2d28044, type: 3}
+      propertyPath: tilesMovedPerTurn
+      value: 5
+      objectReference: {fileID: 0}
     - target: {fileID: 8384323062002602673, guid: 28e5035b663db074882f1b6be2d28044, type: 3}
       propertyPath: gridManager
       value: 

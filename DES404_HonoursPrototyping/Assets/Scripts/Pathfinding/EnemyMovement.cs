@@ -10,7 +10,12 @@ public class EnemyMovement : MonoBehaviour
     [SerializeField] private GridManager gridManager;
     [SerializeField] private Pathfinding pathfinding;
     [SerializeField] private Transform playerCharacter;
+
+
     [SerializeField] private float movementSpeed = 1f;
+    [SerializeField] private float pauseBetweenTiles = 0.5f;
+    [SerializeField] private int tilesMovedPerTurn = 1;
+  
 
     private Vector3Int enemyPosition;
     private List<Vector3Int> path = new List<Vector3Int>();
@@ -36,7 +41,32 @@ public class EnemyMovement : MonoBehaviour
         } 
     }
 
-    IEnumerator MoveOneStep(Vector3Int nextTile)
+    void MoveAlongPath()
+    {
+        if (path != null && path.Count > 0)
+        {
+            StartCoroutine(MoveMultipleTiles());
+        }
+    }
+
+    IEnumerator MoveMultipleTiles()
+    {
+        int steps = Mathf.Min(tilesMovedPerTurn, path.Count);
+
+        for (int i = 0; i < steps; i++)
+        {
+            if (path.Count > 0)
+            {
+                yield return StartCoroutine(MoveToNextTile(path[0]));
+                enemyPosition = path[0];
+                path.RemoveAt(0);
+
+                yield return new WaitForSeconds(pauseBetweenTiles);
+            }
+        }
+    }
+
+    IEnumerator MoveToNextTile(Vector3Int nextTile)
     {
         Vector3 targetPosition = floorTilemap.CellToWorld(nextTile) + floorTilemap.cellSize / 2;
         Vector3 startPosition = transform.position;
@@ -52,13 +82,9 @@ public class EnemyMovement : MonoBehaviour
         transform.position = targetPosition;
     }
 
-    void MoveAlongPath()
-    {
-        if (path != null && path.Count > 0)
-        {
-            StartCoroutine(MoveOneStep(path[0]));
-            enemyPosition = path[0];
-            path.RemoveAt(0);
-        }
-    }
+
+
+
+
 }
+
