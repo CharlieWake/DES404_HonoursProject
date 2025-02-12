@@ -24,12 +24,16 @@ public class EnemyMovement : MonoBehaviour
     void Start()
     {
         enemyPosition = floorTilemap.WorldToCell(transform.position);
+        TurnManager.instance.FindAllEnemies(this);
     }
 
-    // Update is called once per frame
-    void Update()
+    public IEnumerator TakeTurn()
     {
-        if (Input.GetKeyDown(KeyCode.Return))
+        if (gridManager.getAdjacentTiles(enemyPosition).Contains(floorTilemap.WorldToCell(playerCharacter.position)))
+        {
+            AttackPlayer();
+        }
+        else
         {
             if (path == null || path.Count == 0)
             {
@@ -37,23 +41,8 @@ public class EnemyMovement : MonoBehaviour
                 path = pathfinding.FindPath(enemyPosition, playerPosition);
             }
 
-            MoveAlongPath();
-        } 
-    }
-
-    void MoveAlongPath()
-    {
-        bool isAdjacentToPlayer = gridManager.getAdjacentTiles(enemyPosition).Contains(floorTilemap.WorldToCell(playerCharacter.position));
-        
-        if (isAdjacentToPlayer)
-        {
-            AttackPlayer();
-        }
-        
-        if (path != null && path.Count > 0 && !isAdjacentToPlayer)
-        {           
-            StartCoroutine(MoveMultipleTiles());
-        }
+            yield return StartCoroutine(MoveMultipleTiles());
+        }      
     }
 
     IEnumerator MoveMultipleTiles()

@@ -17,15 +17,44 @@ public class PlayerController : MonoBehaviour
     private Vector3Int gridPosition;
 
     [SerializeField] private float spinSpeed;
+    private Vector3 spinnerStartPosition;
+    private Quaternion spinnerStartRotation;
+    private bool hasResetSpinner = false;
+
+    private void Start()
+    {
+        spinnerStartPosition = movementSpinner.transform.localPosition;
+        spinnerStartRotation = movementSpinner.transform.localRotation;
+    }
 
     // Update is called once per frame
     void Update()
     {
-        InputCheck();
-        RotateSpinner();
-        HighlightCheck(movementSpinner.transform.position);
-    }
+        if (TurnManager.instance.IsPlayerTurn())
+        {
+            movementSpinner.SetActive(true);
+            highlighter.SetActive(true);
 
+            if (!hasResetSpinner)
+            {
+                movementSpinner.transform.localPosition = spinnerStartPosition;
+                movementSpinner.transform.localRotation = spinnerStartRotation;
+                hasResetSpinner = true;
+            }
+                        
+            InputCheck();
+            RotateSpinner();
+            HighlightCheck(movementSpinner.transform.position);
+        }
+        else
+        {
+            movementSpinner.SetActive(false);
+            highlighter.SetActive(false);
+
+            hasResetSpinner = false;
+
+        }
+    }
     
     private void InputCheck()
     {
@@ -39,7 +68,12 @@ public class PlayerController : MonoBehaviour
     private void MoveCharacter(Vector2 spinnerPosition)
     {
         if (CanMoveToCell(spinnerPosition))
+        {
             transform.position = floorTilemap.GetCellCenterWorld(gridPosition);
+            TurnManager.instance.StartEnemyTurn();
+        }
+            
+
     }
 
     private bool CanMoveToCell(Vector2 spinnerPosition)
@@ -52,11 +86,7 @@ public class PlayerController : MonoBehaviour
 
     private void RotateSpinner()
     {
-        Vector2 rotatePoint;
-        Vector3 rotateAxis = new Vector3(0, 0, 1);
-        
-        rotatePoint = transform.position;
-        movementSpinner.transform.RotateAround(rotatePoint, rotateAxis, Time.deltaTime * spinSpeed);
+        movementSpinner.transform.RotateAround(transform.position, Vector3.forward, Time.deltaTime * spinSpeed);
     }
 
     private void HighlightCheck(Vector2 spinnerPosition)
