@@ -43,8 +43,15 @@ public class EnemyMovement : MonoBehaviour
 
     void MoveAlongPath()
     {
-        if (path != null && path.Count > 0)
+        bool isAdjacentToPlayer = gridManager.getAdjacentTiles(enemyPosition).Contains(floorTilemap.WorldToCell(playerCharacter.position));
+        
+        if (isAdjacentToPlayer)
         {
+            AttackPlayer();
+        }
+        
+        if (path != null && path.Count > 0 && !isAdjacentToPlayer)
+        {           
             StartCoroutine(MoveMultipleTiles());
         }
     }
@@ -61,7 +68,7 @@ public class EnemyMovement : MonoBehaviour
                 enemyPosition = path[0];
                 path.RemoveAt(0);
 
-                yield return new WaitForSeconds(pauseBetweenTiles);
+                yield return new WaitForSeconds(pauseBetweenTiles);                
             }
         }
     }
@@ -80,6 +87,11 @@ public class EnemyMovement : MonoBehaviour
         }
 
         transform.position = targetPosition;
+    }
+
+    void AttackPlayer()
+    {
+        Debug.Log("Next to Player, I now Attack!");
     }
 
 

@@ -307,87 +307,6 @@ Tilemap:
   m_CorrespondingSourceObject: {fileID: 4689786697215768266, guid: a52a9b322785bca4086f24c0fcffc79e, type: 3}
   m_PrefabInstance: {fileID: 7526993189510915179}
   m_PrefabAsset: {fileID: 0}
---- !u!1001 &1356169156
-PrefabInstance:
-  m_ObjectHideFlags: 0
-  serializedVersion: 2
-  m_Modification:
-    serializedVersion: 3
-    m_TransformParent: {fileID: 0}
-    m_Modifications:
-    - target: {fileID: 409179369100451264, guid: 28e5035b663db074882f1b6be2d28044, type: 3}
-      propertyPath: m_Name
-      value: Enemy (1)
-      objectReference: {fileID: 0}
-    - target: {fileID: 964163406872264347, guid: 28e5035b663db074882f1b6be2d28044, type: 3}
-      propertyPath: m_LocalPosition.x
-      value: -6.5
-      objectReference: {fileID: 0}
-    - target: {fileID: 964163406872264347, guid: 28e5035b663db074882f1b6be2d28044, type: 3}
-      propertyPath: m_LocalPosition.y
-      value: -3.5
-      objectReference: {fileID: 0}
-    - target: {fileID: 964163406872264347, guid: 28e5035b663db074882f1b6be2d28044, type: 3}
-      propertyPath: m_LocalPosition.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 964163406872264347, guid: 28e5035b663db074882f1b6be2d28044, type: 3}
-      propertyPath: m_LocalRotation.w
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 964163406872264347, guid: 28e5035b663db074882f1b6be2d28044, type: 3}
-      propertyPath: m_LocalRotation.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 964163406872264347, guid: 28e5035b663db074882f1b6be2d28044, type: 3}
-      propertyPath: m_LocalRotation.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 964163406872264347, guid: 28e5035b663db074882f1b6be2d28044, type: 3}
-      propertyPath: m_LocalRotation.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 964163406872264347, guid: 28e5035b663db074882f1b6be2d28044, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 964163406872264347, guid: 28e5035b663db074882f1b6be2d28044, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 964163406872264347, guid: 28e5035b663db074882f1b6be2d28044, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 2741828362048693730, guid: 28e5035b663db074882f1b6be2d28044, type: 3}
-      propertyPath: gridManager
-      value: 
-      objectReference: {fileID: 1852307764}
-    - target: {fileID: 2741828362048693730, guid: 28e5035b663db074882f1b6be2d28044, type: 3}
-      propertyPath: floorTilemap
-      value: 
-      objectReference: {fileID: 1286355236}
-    - target: {fileID: 2741828362048693730, guid: 28e5035b663db074882f1b6be2d28044, type: 3}
-      propertyPath: playerCharacter
-      value: 
-      objectReference: {fileID: 2034627451}
-    - target: {fileID: 2741828362048693730, guid: 28e5035b663db074882f1b6be2d28044, type: 3}
-      propertyPath: tilesMovedPerTurn
-      value: 3
-      objectReference: {fileID: 0}
-    - target: {fileID: 8384323062002602673, guid: 28e5035b663db074882f1b6be2d28044, type: 3}
-      propertyPath: gridManager
-      value: 
-      objectReference: {fileID: 1852307764}
-    - target: {fileID: 8384323062002602673, guid: 28e5035b663db074882f1b6be2d28044, type: 3}
-      propertyPath: floorTilemap
-      value: 
-      objectReference: {fileID: 1286355236}
-    m_RemovedComponents: []
-    m_RemovedGameObjects: []
-    m_AddedGameObjects: []
-    m_AddedComponents: []
-  m_SourcePrefab: {fileID: 100100000, guid: 28e5035b663db074882f1b6be2d28044, type: 3}
 --- !u!4 &1719629468 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 6325183160179966077, guid: a52a9b322785bca4086f24c0fcffc79e, type: 3}
@@ -515,7 +434,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 964163406872264347, guid: 28e5035b663db074882f1b6be2d28044, type: 3}
       propertyPath: m_LocalPosition.x
-      value: -4.5
+      value: -0.5
       objectReference: {fileID: 0}
     - target: {fileID: 964163406872264347, guid: 28e5035b663db074882f1b6be2d28044, type: 3}
       propertyPath: m_LocalPosition.y
@@ -575,7 +494,7 @@ PrefabInstance:
       objectReference: {fileID: 2034627451}
     - target: {fileID: 2741828362048693730, guid: 28e5035b663db074882f1b6be2d28044, type: 3}
       propertyPath: tilesMovedPerTurn
-      value: 5
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 8384323062002602673, guid: 28e5035b663db074882f1b6be2d28044, type: 3}
       propertyPath: gridManager
@@ -2317,4 +2236,3 @@ SceneRoots:
   - {fileID: 7526993189510915179}
   - {fileID: 1036588897915828736}
   - {fileID: 4168800639222097794}
-  - {fileID: 1356169156}

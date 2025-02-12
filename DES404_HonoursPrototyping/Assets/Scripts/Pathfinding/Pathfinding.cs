@@ -29,8 +29,14 @@ public class Pathfinding : MonoBehaviour
                     currentTile = position;
             }
 
-            if (currentTile == targetPosition)
-                return RetracePath(tileMovedFrom, startPosition, targetPosition);
+            if (gridManager.getAdjacentTiles(targetPosition).Contains(currentTile))
+            {
+                if (currentTile == startPosition)
+                    return new List<Vector3Int>();
+
+                return RetracePath(tileMovedFrom, startPosition, currentTile);
+            }
+                
 
             tilesToCheck.Remove(currentTile);
 
