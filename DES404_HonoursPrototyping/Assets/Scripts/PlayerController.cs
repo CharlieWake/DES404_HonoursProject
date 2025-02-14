@@ -16,10 +16,13 @@ public class PlayerController : MonoBehaviour
 
     private Vector3Int gridPosition;
 
+    [SerializeField] private float movementSpeed = 1f;
     [SerializeField] private float spinSpeed;
     private Vector3 spinnerStartPosition;
     private Quaternion spinnerStartRotation;
     private bool hasResetSpinner = false;
+
+    public bool isMoving = false;
 
     private void Start()
     {
@@ -30,7 +33,7 @@ public class PlayerController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (TurnManager.instance.IsPlayerTurn())
+        if (TurnManager.instance.IsPlayerTurn() && !isMoving)
         {
             movementSpinner.SetActive(true);
             highlighter.SetActive(true);
@@ -44,7 +47,7 @@ public class PlayerController : MonoBehaviour
                         
             InputCheck();
             RotateSpinner();
-            HighlightCheck(movementSpinner.transform.position);
+            // HighlightCheck(movementSpinner.transform.position);
         }
         else
         {
@@ -52,31 +55,24 @@ public class PlayerController : MonoBehaviour
             highlighter.SetActive(false);
 
             hasResetSpinner = false;
-
         }
     }
     
     private void InputCheck()
-    {
+    {        
         if (Input.GetKeyDown("space"))
         {
             // Debug.Log("Button is Pressed!");
-            MoveCharacter(movementSpinner.transform.position);
+            if (CanMoveToCell(movementSpinner.transform.position))
+            {
+                // movementSpinner.SetActive(false);
+                isMoving = true;
+                StartCoroutine(MoveToTargetPosition(gridPosition));
+            }
         }
     }
 
-    private void MoveCharacter(Vector2 spinnerPosition)
-    {
-        if (CanMoveToCell(spinnerPosition))
-        {
-            transform.position = floorTilemap.GetCellCenterWorld(gridPosition);
-            TurnManager.instance.StartEnemyTurn();
-        }
-            
-
-    }
-
-    private bool CanMoveToCell(Vector2 spinnerPosition)
+        private bool CanMoveToCell(Vector2 spinnerPosition)
     {
         gridPosition = floorTilemap.WorldToCell(spinnerPosition);
         if (!floorTilemap.HasTile(gridPosition) || decorTilemap.HasTile(gridPosition))
@@ -84,9 +80,28 @@ public class PlayerController : MonoBehaviour
         return true;
     }
 
+    IEnumerator MoveToTargetPosition(Vector3Int targetPosition)
+    {
+        Vector3 targetGridCentre = floorTilemap.GetCellCenterWorld(targetPosition);
+        Vector3 startPosition = transform.position;
+        float elapsedTime = 0f;
+
+        while (elapsedTime < 1f / movementSpeed)
+        {
+            transform.position = Vector3.Lerp(startPosition, targetGridCentre, elapsedTime * movementSpeed);
+            elapsedTime += Time.deltaTime;
+            yield return null;
+        }
+
+        transform.position = targetGridCentre;
+        highlighter.SetActive(false);
+        Invoke("StartEnemyTurn", 1f);
+    }
+
     private void RotateSpinner()
     {
         movementSpinner.transform.RotateAround(transform.position, Vector3.forward, Time.deltaTime * spinSpeed);
+        HighlightCheck(movementSpinner.transform.position);
     }
 
     private void HighlightCheck(Vector2 spinnerPosition)
@@ -100,5 +115,10 @@ public class PlayerController : MonoBehaviour
         {
             highlighter.SetActive(false);
         }
+    }
+
+    private void StartEnemyTurn()
+    {
+        TurnManager.instance.StartEnemyTurn();
     }
 }
