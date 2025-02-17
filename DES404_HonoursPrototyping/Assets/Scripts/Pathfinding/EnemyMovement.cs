@@ -5,17 +5,16 @@ using UnityEngine.Tilemaps;
 
 public class EnemyMovement : MonoBehaviour
 {
-
     [SerializeField] private Tilemap floorTilemap;
     [SerializeField] private GridManager gridManager;
     [SerializeField] private Pathfinding pathfinding;
     [SerializeField] private Transform playerCharacter;
 
 
-    [SerializeField] private float movementSpeed = 1f;
+    private float movementSpeed = 1f;
     [SerializeField] private float pauseBetweenTiles = 0.5f;
-    [SerializeField] private int tilesMovedPerTurn = 1;
-  
+    [SerializeField] private int actionsPerTurn = 1;  
+
 
     private Vector3Int enemyPosition;
     private List<Vector3Int> path = new List<Vector3Int>();
@@ -23,43 +22,43 @@ public class EnemyMovement : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        enemyPosition = floorTilemap.WorldToCell(transform.position);
         TurnManager.instance.FindAllEnemies(this);
+        enemyPosition = floorTilemap.WorldToCell(transform.position);
+
     }
 
     public IEnumerator TakeTurn()
     {
-        if (gridManager.getAdjacentTiles(enemyPosition).Contains(floorTilemap.WorldToCell(playerCharacter.position)))
+        int actionsRemaining = actionsPerTurn;
+
+        while (actionsRemaining > 0)
         {
-            AttackPlayer();
-        }
-        else
-        {
-            if (path == null || path.Count == 0)
+            if (gridManager.getAdjacentTiles(enemyPosition).Contains(floorTilemap.WorldToCell(playerCharacter.position)))
             {
-                Vector3Int playerPosition = floorTilemap.WorldToCell(playerCharacter.position);
-                path = pathfinding.FindPath(enemyPosition, playerPosition);
+                AttackPlayer();
+                actionsRemaining--;
             }
-
-            yield return StartCoroutine(MoveMultipleTiles());
-        }      
-    }
-
-    IEnumerator MoveMultipleTiles()
-    {
-        int steps = Mathf.Min(tilesMovedPerTurn, path.Count);
-
-        for (int i = 0; i < steps; i++)
-        {
-            if (path.Count > 0)
+            else
             {
+                if (path == null || path.Count == 0)
+                {
+                    Vector3Int playerPosition = floorTilemap.WorldToCell(playerCharacter.position);
+                    path = pathfinding.FindPath(enemyPosition, playerPosition);
+                }
+
                 yield return StartCoroutine(MoveToNextTile(path[0]));
                 enemyPosition = path[0];
                 path.RemoveAt(0);
 
-                yield return new WaitForSeconds(pauseBetweenTiles);                
+                actionsRemaining--;
+
+                yield return new WaitForSeconds(pauseBetweenTiles);
             }
-        }
+        }               
+
+        // At the start of its turn, an enemy uses the getAdjacentTiles method from the GridManager script
+        // If its next to the player, it will use its action to attack
+        // If not, it will calculate a new path to the player using the FindPath method in the Pathfinding script
     }
 
     IEnumerator MoveToNextTile(Vector3Int nextTile)
@@ -76,6 +75,8 @@ public class EnemyMovement : MonoBehaviour
         }
 
         transform.position = targetPosition;
+
+        // This function works similar to the PlayerController function to lerp the enemy sprite smoothly to the targetPosition
     }
 
     void AttackPlayer()
