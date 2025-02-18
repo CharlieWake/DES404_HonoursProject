@@ -12,6 +12,10 @@ public class GridManager : MonoBehaviour
     // The two values are a Vector3Int which will be the coordinates of the walkable tile
     // And the bool will say that it can be walked on or not
 
+    public Dictionary<Vector3Int, bool> occupiedTiles = new Dictionary<Vector3Int, bool>();
+    // Creates another dictionary with two values to store a list of tiles that are occupied by enemies
+    // This dictionary takes in the tile position on the tilemap (Vector3Int) and whether it is occupied or not (bool)
+
     // Start is called before the first frame update
     void Start()
     {
@@ -66,5 +70,29 @@ public class GridManager : MonoBehaviour
         // Then the list is checked to see if any of the tiles in those 4 directions aren't walkable 
         // If they are, they're removed from the list
         // The method then returns the list of remaining adjacent tiles
+    }
+
+    public void SetTileAsOccupied(Vector3Int tilePosition, bool isOccupied)
+    {
+        if (isOccupied)
+        {
+            occupiedTiles[tilePosition] = true;
+        }
+        else if (occupiedTiles.ContainsKey(tilePosition))
+        {
+            occupiedTiles.Remove(tilePosition);
+        }
+
+        // This function takes in a tilePosition Vector3Int and a bool
+        // Using the dictionary created above, it adds a tile that an enemy is on to the dictionary of occupied tiles
+        // This function can also remove tiles by checking if they already exist in the dictionary and removing them
+    }
+
+
+    public bool IsTileOccupied(Vector3Int tilePosition)
+    {
+        return occupiedTiles.ContainsKey(tilePosition);
+
+        // Gets the list of currently occupied tiles which can be checked when enemies or the player are moving to a new grid space
     }
 }

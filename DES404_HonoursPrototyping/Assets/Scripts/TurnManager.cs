@@ -44,7 +44,21 @@ public class TurnManager : MonoBehaviour
 
     public void StartEnemyTurn()
     {
+        SortEnemiesByDistance();
         StartCoroutine(EnemyTurn());
+    }
+
+    private void SortEnemiesByDistance()
+    {
+        enemies.Sort((enemy1, enemy2) =>
+            GetDistance(enemy1.transform.position, playerCharacter.transform.position)
+            .CompareTo(GetDistance(enemy2.transform.position, playerCharacter.transform.position)));
+            
+    }
+
+    private int GetDistance(Vector3 enemyPosition, Vector3 playerPosition)
+    {
+        return Mathf.RoundToInt(Mathf.Abs(enemyPosition.x - playerPosition.x) + Mathf.Abs(enemyPosition.y - playerPosition.y));
     }
 
     private IEnumerator EnemyTurn()

@@ -13,7 +13,7 @@ public class Pathfinding : MonoBehaviour
     {
         // This method returns a list of Vector3Ints, a 'Path' for the enemies to follow
         // It takes in two values, a Vector3Int Start Position and a Vector3Int targetPosition
-        
+
         List<Vector3Int> tilesToCheck = new List<Vector3Int> { startPosition };
         // A list of tiles to check as part of the pathfinding
 
@@ -59,7 +59,7 @@ public class Pathfinding : MonoBehaviour
                 // Why? This is because the enemy only needs to be adjacent to the targetPosition (the player) to attack them
                 // Then the path is reversed with the RetracePath method to create a path of coordinates for the enemy to follow
             }
-                
+
 
             tilesToCheck.Remove(currentTile); // Removes the currentTile to avoid looping over it again in the next loop
 
