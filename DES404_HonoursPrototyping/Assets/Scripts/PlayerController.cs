@@ -11,6 +11,7 @@ public class PlayerController : MonoBehaviour
 
 
     // Gets references to the different layers of tilemap
+    [SerializeField] private GridManager gridManager;
     [SerializeField] private Tilemap floorTilemap;
     [SerializeField] private Tilemap decorTilemap;
     [SerializeField] private GameObject highlighter;
@@ -27,7 +28,7 @@ public class PlayerController : MonoBehaviour
     private Quaternion spinnerStartRotation;
     private bool hasResetSpinner = false;
 
-    public bool isMoving = false;
+    public bool takingAction = false;
 
     private void Start()
     {
@@ -39,7 +40,7 @@ public class PlayerController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (TurnManager.instance.IsPlayerTurn() && !isMoving)
+        if (TurnManager.instance.IsPlayerTurn() && !takingAction)
         {
             movementSpinner.SetActive(true);
             highlighter.SetActive(true);
@@ -73,7 +74,7 @@ public class PlayerController : MonoBehaviour
         {
             if (CanMoveToCell(movementSpinner.transform.position))
             {
-                isMoving = true;
+                takingAction = true;
                 remainingActions--;
                 StartCoroutine(MoveToTargetPosition(gridPosition));
             }
@@ -88,7 +89,7 @@ public class PlayerController : MonoBehaviour
         private bool CanMoveToCell(Vector2 spinnerPosition)
     {
         gridPosition = floorTilemap.WorldToCell(spinnerPosition);
-        if (!floorTilemap.HasTile(gridPosition) || decorTilemap.HasTile(gridPosition))
+        if (!floorTilemap.HasTile(gridPosition) || decorTilemap.HasTile(gridPosition) || !gridManager.getAdjacentTiles(floorTilemap.WorldToCell(transform.position)).Contains(gridPosition))
             return false;
         return true;
 
@@ -117,7 +118,7 @@ public class PlayerController : MonoBehaviour
 
         if (remainingActions > 0)
         {
-            isMoving = false;
+            takingAction = false;
         }
         else
         {

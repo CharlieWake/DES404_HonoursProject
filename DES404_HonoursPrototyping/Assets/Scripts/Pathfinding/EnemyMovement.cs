@@ -11,7 +11,7 @@ public class EnemyMovement : MonoBehaviour
     [SerializeField] private Transform playerCharacter;
 
 
-    private float movementSpeed = 1f;
+    [SerializeField] private float movementSpeed = 1f;
     [SerializeField] private float pauseBetweenTiles = 0.5f;
     [SerializeField] private int actionsPerTurn = 1;
 

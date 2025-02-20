@@ -73,7 +73,7 @@ public class TurnManager : MonoBehaviour
 
         isPlayerTurn= true;
         playerControllerScript.ResetActions();
-        playerControllerScript.isMoving = false;
+        playerControllerScript.takingAction = false;
         virtualCamera.Follow = playerCharacter.transform;
 
         // This is a coroutine which is a function that can be paused and resumed at runtime
