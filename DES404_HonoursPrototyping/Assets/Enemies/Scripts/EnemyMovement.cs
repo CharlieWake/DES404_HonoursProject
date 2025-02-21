@@ -9,11 +9,12 @@ public class EnemyMovement : MonoBehaviour
     [SerializeField] private GridManager gridManager;
     [SerializeField] private Pathfinding pathfinding;
     [SerializeField] private Transform playerCharacter;
+    [SerializeField] private EnemyStats enemyStats;
 
 
     [SerializeField] private float movementSpeed = 1f;
     [SerializeField] private float pauseBetweenTiles = 0.5f;
-    [SerializeField] private int actionsPerTurn = 1;
+    private int actionsPerTurn;
 
 
     private Vector3Int enemyPosition;
@@ -23,6 +24,7 @@ public class EnemyMovement : MonoBehaviour
     void Start()
     {
         TurnManager.instance.FindAllEnemies(this);
+        actionsPerTurn = enemyStats.actionsPerTurn;
         enemyPosition = floorTilemap.WorldToCell(transform.position);
         gridManager.SetTileAsOccupied(enemyPosition, true);
     }
@@ -104,5 +106,14 @@ public class EnemyMovement : MonoBehaviour
     void AttackPlayer()
     {
         Debug.Log("Next to Player, I now Attack!");
+        int damageAmount = Random.Range(1, 7);
+        playerCharacter.GetComponent<PlayerStats>().TakeDamage(damageAmount);
+        Debug.Log("I dealt " + damageAmount + " to the player");
+    }
+
+    public void RemoveEnemy()
+    {
+        gridManager.SetTileAsOccupied(enemyPosition, false);
+        TurnManager.instance.RemoveEnemy(this);
     }
 }

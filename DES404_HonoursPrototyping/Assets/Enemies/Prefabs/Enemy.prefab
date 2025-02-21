@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 2741828362048693730}
   m_Layer: 0
   m_Name: Enemy
-  m_TagString: Untagged
+  m_TagString: Enemy
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -64,7 +64,9 @@ MonoBehaviour:
   gridManager: {fileID: 0}
   pathfinding: {fileID: 8384323062002602673}
   playerCharacter: {fileID: 0}
-  movementSpeed: 1
+  movementSpeed: 1.5
+  pauseBetweenTiles: 0.5
+  actionsPerTurn: 1
 --- !u!1 &9204335935988193752
 GameObject:
   m_ObjectHideFlags: 0

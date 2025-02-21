@@ -42,6 +42,12 @@ public class TurnManager : MonoBehaviour
         // This is called from the enemy's 'EnemyMovement' script
     }
 
+    public void RemoveEnemy(EnemyMovement enemy)
+    {
+        enemies.Remove(enemy);
+    }
+
+
     public void StartEnemyTurn()
     {
         SortEnemiesByDistance();

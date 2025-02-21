@@ -178,7 +178,7 @@ GameObject:
   - component: {fileID: 1287181250462038655}
   - component: {fileID: 6758584953087844711}
   m_Layer: 0
-  m_Name: TurnManager
+  m_Name: GameManagers
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
