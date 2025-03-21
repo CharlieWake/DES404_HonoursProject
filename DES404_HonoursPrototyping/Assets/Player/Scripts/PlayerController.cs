@@ -62,7 +62,7 @@ public class PlayerController : MonoBehaviour
                 hasResetSpinner = true;
             }
                         
-            InputCheck();
+            // InputCheck();
             RotateSpinner();
 
         }
@@ -78,9 +78,9 @@ public class PlayerController : MonoBehaviour
         // Also resets the movementSpinner's local position and rotation to where the player parent object is
     }
     
-    private void InputCheck()
+    public void InputCheck()
     {        
-        if (Input.GetKeyDown("space") && remainingActions > 0)
+        if (remainingActions > 0)
         {
             CellInteractionInfo cellInfo = GetCellInfo(movementSpinner.transform.position);
 
@@ -231,5 +231,9 @@ public class PlayerController : MonoBehaviour
         {
             Invoke("EndPlayerTurn", 1f);
         }
+    }
+    public void TestInput()
+    {
+        Debug.Log("testing input taps");
     }
 }
