@@ -1,0 +1,11 @@
+# ninja log v5
+33	272	7642124009913018	FramePacing/CMakeFiles/swappywrapper.dir/UnitySwappyWrapper.cpp.o	4d1ed164dad61b1d
+273	435	7642124011104666	C:/Users/charl/Documents/GitHub/DES404_HonoursProject/DES404_HonoursPrototyping/Library/Bee/Android/Prj/IL2CPP/Gradle/unityLibrary/build/intermediates/cxx/Debug/2o6o4r3d/obj/arm64-v8a/libswappywrapper.so	10a5c54394153f89
+15	686	7642124014039354	GameActivity/CMakeFiles/game.dir/UGAInputKeyEvent.cpp.o	6a3b244679eec077
+23	707	7642124014284855	GameActivity/CMakeFiles/game.dir/UGAInputMotionEvent.cpp.o	18187f567f1ce9e7
+27	715	7642124014330002	GameActivity/CMakeFiles/game.dir/UGASoftKeyboard.cpp.o	8d6e1f3876c04547
+11	720	7642124014385151	GameActivity/CMakeFiles/game.dir/UGAEntry.cpp.o	eab318ae7e54b64
+6	739	7642124014578924	GameActivity/CMakeFiles/game.dir/UGADebug.cpp.o	fa6a1ef627fc469e
+20	797	7642124015168716	GameActivity/CMakeFiles/game.dir/UGAInput.cpp.o	b786c8197f64be96
+1	819	7642124015374740	GameActivity/CMakeFiles/game.dir/UGAApplication.cpp.o	bf43e4987d8247c5
+819	947	7642124016245402	C:/Users/charl/Documents/GitHub/DES404_HonoursProject/DES404_HonoursPrototyping/Library/Bee/Android/Prj/IL2CPP/Gradle/unityLibrary/build/intermediates/cxx/Debug/2o6o4r3d/obj/arm64-v8a/libgame.so	2021f441a22ed5c1

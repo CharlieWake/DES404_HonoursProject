@@ -1,0 +1,8 @@
+C:/Users/charl/Documents/GitHub/DES404_HonoursProject/DES404_HonoursPrototyping/.utmp/Debug/2o6o4r3d/arm64-v8a/CMakeFiles/edit_cache.dir
+C:/Users/charl/Documents/GitHub/DES404_HonoursProject/DES404_HonoursPrototyping/.utmp/Debug/2o6o4r3d/arm64-v8a/CMakeFiles/rebuild_cache.dir
+C:/Users/charl/Documents/GitHub/DES404_HonoursProject/DES404_HonoursPrototyping/.utmp/Debug/2o6o4r3d/arm64-v8a/GameActivity/CMakeFiles/game.dir
+C:/Users/charl/Documents/GitHub/DES404_HonoursProject/DES404_HonoursPrototyping/.utmp/Debug/2o6o4r3d/arm64-v8a/GameActivity/CMakeFiles/edit_cache.dir
+C:/Users/charl/Documents/GitHub/DES404_HonoursProject/DES404_HonoursPrototyping/.utmp/Debug/2o6o4r3d/arm64-v8a/GameActivity/CMakeFiles/rebuild_cache.dir
+C:/Users/charl/Documents/GitHub/DES404_HonoursProject/DES404_HonoursPrototyping/.utmp/Debug/2o6o4r3d/arm64-v8a/FramePacing/CMakeFiles/swappywrapper.dir
+C:/Users/charl/Documents/GitHub/DES404_HonoursProject/DES404_HonoursPrototyping/.utmp/Debug/2o6o4r3d/arm64-v8a/FramePacing/CMakeFiles/edit_cache.dir
+C:/Users/charl/Documents/GitHub/DES404_HonoursProject/DES404_HonoursPrototyping/.utmp/Debug/2o6o4r3d/arm64-v8a/FramePacing/CMakeFiles/rebuild_cache.dir
