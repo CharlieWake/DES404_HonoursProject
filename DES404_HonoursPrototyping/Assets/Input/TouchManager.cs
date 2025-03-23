@@ -8,7 +8,8 @@ public class TouchManager : MonoBehaviour
     private PlayerInput playerInput;
     private InputAction touchPressAction;
 
-    [SerializeField] private PlayerController playerControllerScript;
+    private PlayerController playerControllerScript;
+    [SerializeField] TurnManager turnManager;
 
     private void Awake()
     {
@@ -19,7 +20,7 @@ public class TouchManager : MonoBehaviour
 
     private void OnEnable()
     {
-        touchPressAction.performed += TouchPressed;
+        touchPressAction.performed += TouchPressed;      
     }
 
     private void OnDisable()
@@ -29,8 +30,9 @@ public class TouchManager : MonoBehaviour
 
     private void TouchPressed(InputAction.CallbackContext context)
     {
-        // Debug.Log("button tapped");
-        playerControllerScript.TestInput();
-        playerControllerScript.InputCheck();
+        if (turnManager.isPlayerTurn == true)
+        {
+            playerControllerScript.PlayerAction();
+        }        
     }
 }

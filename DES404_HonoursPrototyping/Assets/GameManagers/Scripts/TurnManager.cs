@@ -8,17 +8,14 @@ public class TurnManager : MonoBehaviour
         
     public static TurnManager instance;
 
-    // Creates a reference to the Player Character and the Cinemachine Camera
     [SerializeField] private CinemachineVirtualCamera virtualCamera;
     [SerializeField] private GameObject playerCharacter;
-
-    // Gets a reference to the PlayerController script attached to the playerCharacter
     [SerializeField] private PlayerController playerControllerScript;
 
     // Creates a new List of type EnemyMovement script and creates it when the game starts.
-    [SerializeField] private List<EnemyMovement> enemies = new List<EnemyMovement>();
+    private List<EnemyMovement> enemies = new List<EnemyMovement>();
 
-    private bool isPlayerTurn = true;
+    public bool isPlayerTurn = true;
 
     private void Awake()
     {

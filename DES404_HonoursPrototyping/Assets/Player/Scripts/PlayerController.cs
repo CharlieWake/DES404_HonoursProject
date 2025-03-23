@@ -62,7 +62,6 @@ public class PlayerController : MonoBehaviour
                 hasResetSpinner = true;
             }
                         
-            // InputCheck();
             RotateSpinner();
 
         }
@@ -78,8 +77,8 @@ public class PlayerController : MonoBehaviour
         // Also resets the movementSpinner's local position and rotation to where the player parent object is
     }
     
-    public void InputCheck()
-    {        
+    public void PlayerAction()
+    {
         if (remainingActions > 0)
         {
             CellInteractionInfo cellInfo = GetCellInfo(movementSpinner.transform.position);
@@ -96,12 +95,7 @@ public class PlayerController : MonoBehaviour
             {
                 StartCoroutine(MoveToTargetPosition(gridPosition));
             }                          
-        }
-
-        // This function checks whether the player has pressed the movement button (currently the spacebar)
-        // It calls a method 'CanMoveToCell' and passes in the movementSpinner's position
-        // If that method returns true then isMoving is set to true to prevent extra inputs being fired while the player sprite is moving
-        // Then starts a Coroutine to lerp to the new grid position
+        }    
     }
     private CellInteractionInfo GetCellInfo(Vector2 spinnerPosition)
     {
@@ -231,9 +225,5 @@ public class PlayerController : MonoBehaviour
         {
             Invoke("EndPlayerTurn", 1f);
         }
-    }
-    public void TestInput()
-    {
-        Debug.Log("testing input taps");
-    }
+    }   
 }

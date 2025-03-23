@@ -1,13 +1,22 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class PlayerStats : MonoBehaviour
 {
 
-    [SerializeField] private int maxHealth = 10;
-    private int currentHealth;
+    [SerializeField] private float maxHealth = 10;
+    private float currentHealth;
+
+    public int currentExperience;
+    private int experienceToLevelUp;
+
+    private int playerLevel;
+
     public int actionsPerTurn;
+
+    public Image healthBar;
     
 
     // Start is called before the first frame update
@@ -16,9 +25,14 @@ public class PlayerStats : MonoBehaviour
         currentHealth = maxHealth;
     }
 
-    public void TakeDamage(int damageAmount)
+    private void Update()
     {
-        currentHealth -= damageAmount;
+        healthBar.fillAmount = currentHealth / maxHealth;
+    }
+
+    public void TakeDamage(float damageAmount)
+    {
+        currentHealth -= damageAmount;        
         if (currentHealth <= 0)
         {
             Death();
@@ -31,7 +45,8 @@ public class PlayerStats : MonoBehaviour
 
     private void Death()
     {
-        Destroy(gameObject);
-    }
+        // Destroy(gameObject);
+        Debug.Log("HP is zero, dead.");
+    }      
 
 }
