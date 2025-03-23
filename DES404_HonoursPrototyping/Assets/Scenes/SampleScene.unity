@@ -737,7 +737,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1b9807bb272198f45afbfa32601d5307, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  playerControllerScript: {fileID: 0}
+  playerControllerScript: {fileID: 2034627452}
 --- !u!1001 &1036588897915828736
 PrefabInstance:
   m_ObjectHideFlags: 0

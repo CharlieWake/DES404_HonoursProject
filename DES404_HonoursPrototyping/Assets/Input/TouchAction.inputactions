@@ -26,6 +26,17 @@
                     "action": "TouchPress",
                     "isComposite": false,
                     "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "f3f625a6-2ac9-4e9a-bf1b-979c886c7fb3",
+                    "path": "<Keyboard>/space",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "TouchPress",
+                    "isComposite": false,
+                    "isPartOfComposite": false
                 }
             ]
         }
