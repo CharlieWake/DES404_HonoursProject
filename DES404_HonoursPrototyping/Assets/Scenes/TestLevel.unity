@@ -377,6 +377,14 @@ PrefabInstance:
       propertyPath: playerCharacter
       value: 
       objectReference: {fileID: 2034627451}
+    - target: {fileID: 6528200334970062271, guid: 28e5035b663db074882f1b6be2d28044, type: 3}
+      propertyPath: m_AnchorMax.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6528200334970062271, guid: 28e5035b663db074882f1b6be2d28044, type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 8384323062002602673, guid: 28e5035b663db074882f1b6be2d28044, type: 3}
       propertyPath: gridManager
       value: 
@@ -680,71 +688,6 @@ Tilemap:
   m_CorrespondingSourceObject: {fileID: 4847665912307425837, guid: a52a9b322785bca4086f24c0fcffc79e, type: 3}
   m_PrefabInstance: {fileID: 7526993189510915179}
   m_PrefabAsset: {fileID: 0}
---- !u!1 &921736054 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 409179369100451264, guid: 28e5035b663db074882f1b6be2d28044, type: 3}
-  m_PrefabInstance: {fileID: 4168800639222097794}
-  m_PrefabAsset: {fileID: 0}
---- !u!61 &921736058
-BoxCollider2D:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 921736054}
-  m_Enabled: 1
-  serializedVersion: 3
-  m_Density: 1
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_ForceSendLayers:
-    serializedVersion: 2
-    m_Bits: 4294967295
-  m_ForceReceiveLayers:
-    serializedVersion: 2
-    m_Bits: 4294967295
-  m_ContactCaptureLayers:
-    serializedVersion: 2
-    m_Bits: 4294967295
-  m_CallbackLayers:
-    serializedVersion: 2
-    m_Bits: 4294967295
-  m_IsTrigger: 0
-  m_UsedByEffector: 0
-  m_CompositeOperation: 0
-  m_CompositeOrder: 0
-  m_Offset: {x: 0, y: 0}
-  m_SpriteTilingProperty:
-    border: {x: 0, y: 0, z: 0, w: 0}
-    pivot: {x: 0, y: 0}
-    oldSize: {x: 0, y: 0}
-    newSize: {x: 0, y: 0}
-    adaptiveTilingThreshold: 0
-    drawMode: 0
-    adaptiveTiling: 0
-  m_AutoTiling: 0
-  m_Size: {x: 1, y: 1}
-  m_EdgeRadius: 0
---- !u!114 &921736059
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 921736054}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 249d4067ad4ebfa49adf9166faf40aef, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  maxHealth: 10
-  actionsPerTurn: 1
 --- !u!1 &1153478113
 GameObject:
   m_ObjectHideFlags: 0
@@ -911,6 +854,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   maxHealth: 10
+  healthBar: {fileID: 0}
   actionsPerTurn: 1
 --- !u!1 &1788858520
 GameObject:
@@ -1290,17 +1234,9 @@ PrefabInstance:
       propertyPath: m_Name
       value: Enemy
       objectReference: {fileID: 0}
-    - target: {fileID: 409179369100451264, guid: 28e5035b663db074882f1b6be2d28044, type: 3}
-      propertyPath: m_Layer
-      value: 6
-      objectReference: {fileID: 0}
-    - target: {fileID: 409179369100451264, guid: 28e5035b663db074882f1b6be2d28044, type: 3}
-      propertyPath: m_TagString
-      value: Untagged
-      objectReference: {fileID: 0}
     - target: {fileID: 964163406872264347, guid: 28e5035b663db074882f1b6be2d28044, type: 3}
       propertyPath: m_LocalPosition.x
-      value: -6.5
+      value: -4.5
       objectReference: {fileID: 0}
     - target: {fileID: 964163406872264347, guid: 28e5035b663db074882f1b6be2d28044, type: 3}
       propertyPath: m_LocalPosition.y
@@ -1339,10 +1275,6 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 2741828362048693730, guid: 28e5035b663db074882f1b6be2d28044, type: 3}
-      propertyPath: enemyStats
-      value: 
-      objectReference: {fileID: 921736059}
-    - target: {fileID: 2741828362048693730, guid: 28e5035b663db074882f1b6be2d28044, type: 3}
       propertyPath: gridManager
       value: 
       objectReference: {fileID: 1852307764}
@@ -1354,6 +1286,14 @@ PrefabInstance:
       propertyPath: playerCharacter
       value: 
       objectReference: {fileID: 2034627451}
+    - target: {fileID: 6528200334970062271, guid: 28e5035b663db074882f1b6be2d28044, type: 3}
+      propertyPath: m_AnchorMax.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6528200334970062271, guid: 28e5035b663db074882f1b6be2d28044, type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 8384323062002602673, guid: 28e5035b663db074882f1b6be2d28044, type: 3}
       propertyPath: gridManager
       value: 
@@ -1362,20 +1302,10 @@ PrefabInstance:
       propertyPath: floorTilemap
       value: 
       objectReference: {fileID: 1286355236}
-    - target: {fileID: 9204335935988193752, guid: 28e5035b663db074882f1b6be2d28044, type: 3}
-      propertyPath: m_Layer
-      value: 6
-      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents:
-    - targetCorrespondingSourceObject: {fileID: 409179369100451264, guid: 28e5035b663db074882f1b6be2d28044, type: 3}
-      insertIndex: 1
-      addedObject: {fileID: 921736059}
-    - targetCorrespondingSourceObject: {fileID: 409179369100451264, guid: 28e5035b663db074882f1b6be2d28044, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 921736058}
+    m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 28e5035b663db074882f1b6be2d28044, type: 3}
 --- !u!1001 &7526993189510915179
 PrefabInstance:
