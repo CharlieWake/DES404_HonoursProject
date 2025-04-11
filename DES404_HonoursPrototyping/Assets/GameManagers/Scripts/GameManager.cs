@@ -16,6 +16,7 @@ public class GameManager : MonoBehaviour
     [Header("Grid References")]
     public Tilemap floorTilemap;
     public Tilemap decorTilemap;
+    public GameObject highlighter;
 
     private void Awake()
     {

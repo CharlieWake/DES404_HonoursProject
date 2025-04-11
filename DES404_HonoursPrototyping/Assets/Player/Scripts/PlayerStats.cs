@@ -6,60 +6,63 @@ using TMPro;
 
 public class PlayerStats : MonoBehaviour
 {
+    [Header("Components")]
+    [SerializeField] private PlayerData playerData;
+    SpriteRenderer spriteRenderer;
+    GameObject floatingTextPrefab;
+    Transform playerCanvas;
 
-    private SpriteRenderer spriteRender;
-    [SerializeField] private float maxHealth = 10;
     private float currentHealth;
-
-    public float currentExperience;
-    private float experienceToLevelUp = 100;
-
+    private float currentExperience;    
     private int playerLevel;
 
-    public int actionsPerTurn;
-
-    public Image healthBar;
-    public Image XPBar;
-
+    [Header("UI")]
+    [SerializeField] private Image healthBar;
+    [SerializeField] private Image experienceBar;
     [SerializeField] private TextMeshProUGUI healthText;
-
-    [SerializeField] private GameObject floatingTextPrefab;
-    [SerializeField] private Transform worldCanvas;
-
-
+     
     private void Awake()
     {
-        spriteRender = GetComponentInChildren<SpriteRenderer>();
+        spriteRenderer = GetComponentInChildren<SpriteRenderer>();
+        playerCanvas = transform.Find("PlayerCanvas");
+
+        if (playerCanvas == null)
+        {
+            Debug.LogError("Could not find PlayerCanvas");
+        }
+
+        floatingTextPrefab = Resources.Load<GameObject>("DamageText/FloatingDamageText");
+
+        if (floatingTextPrefab == null)
+        {
+            Debug.LogError("FloatingDamageTextPrefab could not be loaded from Resources!");
+        }
     }
 
     // Start is called before the first frame update
     void Start()
     {
-        currentHealth = maxHealth;
-        UpdateHealthText(currentHealth, maxHealth);
+        currentHealth = playerData.maxHealth;
+        UpdateHealthText(currentHealth, playerData.maxHealth);
     }
 
     private void Update()
     {
-        healthBar.fillAmount = currentHealth / maxHealth;
-        XPBar.fillAmount = currentExperience / experienceToLevelUp;
+        healthBar.fillAmount = currentHealth / playerData.maxHealth;
+        experienceBar.fillAmount = currentExperience / playerData.experienceToLevelUp;
     }
 
     public void TakeDamage(float damageAmount)
     {
         currentHealth -= damageAmount;
-        StartCoroutine(DamageFlash(spriteRender));
+        StartCoroutine(DamageFlash(spriteRenderer));
         FloatingDamageText(damageAmount.ToString(), transform.position);
-        UpdateHealthText(currentHealth, maxHealth);
+        UpdateHealthText(currentHealth, playerData.maxHealth);
 
         if (currentHealth <= 0)
         {
             Death();
-        }
-        else
-        {
-            Debug.Log("Ouch, my remaining health is " + currentHealth);
-        }
+        }        
     }
 
     private void Death()
@@ -80,7 +83,7 @@ public class PlayerStats : MonoBehaviour
     void FloatingDamageText(string damageAmount, Vector3 worldPosition)
     {
         Vector3 screenPosition = Camera.main.WorldToScreenPoint(worldPosition + Vector3.up * 0.5f);
-        GameObject textObject = Instantiate(floatingTextPrefab, worldPosition, Quaternion.identity, worldCanvas);
+        GameObject textObject = Instantiate(floatingTextPrefab, worldPosition, Quaternion.identity, playerCanvas);
         textObject.GetComponent<FloatingDamageText>().setText(damageAmount);
     }
 

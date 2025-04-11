@@ -15,7 +15,7 @@ GameObject:
   - component: {fileID: 714674007498013707}
   m_Layer: 0
   m_Name: Character
-  m_TagString: Untagged
+  m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -93,12 +93,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d9478215e87951f4ca7c82887fe769d8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  maxHealth: 50
-  currentExperience: 0
-  actionsPerTurn: 1
+  playerData: {fileID: 11400000, guid: 15a42c2ef4e34cf439f76c261b0791e8, type: 2}
   healthBar: {fileID: 0}
-  floatingTextPrefab: {fileID: 7987917236184173770, guid: ec9790c6f684cbe4786a840551fd2ce9, type: 3}
-  worldCanvas: {fileID: 3511972788080186277}
+  experienceBar: {fileID: 0}
+  healthText: {fileID: 0}
 --- !u!114 &714674007498013707
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -111,14 +109,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7a61a1a84bcd9a6418072430e2409ba0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  gridManager: {fileID: 0}
-  floorTilemap: {fileID: 0}
-  decorTilemap: {fileID: 0}
-  highlighter: {fileID: 0}
-  playerStats: {fileID: 210163163764092387}
+  playerData: {fileID: 11400000, guid: 15a42c2ef4e34cf439f76c261b0791e8, type: 2}
   movementSpinner: {fileID: 1720806109714009452}
-  movementSpeed: 1.5
-  spinSpeed: -60
+  movementSpinnerSpeed: -60
   takingAction: 0
 --- !u!1 &1720806109714009452
 GameObject:
@@ -219,7 +212,7 @@ GameObject:
   - component: {fileID: 8804735877651945209}
   - component: {fileID: 5942466447883493510}
   m_Layer: 0
-  m_Name: Canvas
+  m_Name: PlayerCanvas
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

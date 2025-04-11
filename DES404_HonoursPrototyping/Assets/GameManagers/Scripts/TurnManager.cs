@@ -35,6 +35,8 @@ public class TurnManager : MonoBehaviour
     {
         playerCharacter = GameManager.instance.playerCharacter;
         playerControllerScript = playerCharacter.GetComponent<PlayerController>();
+
+        virtualCamera.Follow = playerCharacter.transform;
     }
 
     public void FindAllEnemies(EnemyBehaviour enemy)

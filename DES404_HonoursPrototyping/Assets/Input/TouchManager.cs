@@ -9,13 +9,18 @@ public class TouchManager : MonoBehaviour
     private InputAction touchPressAction;
 
     private PlayerController playerControllerScript;
-    [SerializeField] TurnManager turnManager;
+    TurnManager turnManager;
 
     private void Awake()
     {
         playerInput = GetComponent<PlayerInput>();
         playerControllerScript = GetComponent<PlayerController>();
         touchPressAction = playerInput.actions["TouchPress"];
+    }
+
+    private void Start()
+    {
+        turnManager = GameManager.instance.turnManager;
     }
 
     private void OnEnable()

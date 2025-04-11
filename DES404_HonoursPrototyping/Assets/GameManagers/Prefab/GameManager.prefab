@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 476242015354266864}
   - component: {fileID: 6951343763408156782}
   m_Layer: 0
-  m_Name: GameManager 1
+  m_Name: GameManager
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -52,6 +52,7 @@ MonoBehaviour:
   playerStats: {fileID: 0}
   floorTilemap: {fileID: 8459903061521099037}
   decorTilemap: {fileID: 8589696353570602490}
+  highlighter: {fileID: 1444894427089583678}
 --- !u!1001 &3779334981706424279
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -593,6 +594,11 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: a52a9b322785bca4086f24c0fcffc79e, type: 3}
+--- !u!1 &1444894427089583678 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 2341782707795403241, guid: a52a9b322785bca4086f24c0fcffc79e, type: 3}
+  m_PrefabInstance: {fileID: 3779334981706424279}
+  m_PrefabAsset: {fileID: 0}
 --- !u!4 &7184778205991985066 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 6325183160179966077, guid: a52a9b322785bca4086f24c0fcffc79e, type: 3}

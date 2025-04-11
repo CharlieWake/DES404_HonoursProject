@@ -13,24 +13,21 @@ public struct CellInteractionInfo
 
 public class PlayerController : MonoBehaviour
 {
+    [Header("Components")]
+    [SerializeField] private PlayerData playerData;
+    [SerializeField] private GameObject movementSpinner;
+    private GridManager gridManager;
+    private Tilemap floorTilemap;
+    private Tilemap decorTilemap;
+    private GameObject highlighter;
+
+    private float movementSpeed = 1.5f;
     private int actionsPerTurn;
     private int remainingActions;
-
-    // Gets references to the different layers of tilemap
-    [SerializeField] private GridManager gridManager;
-    [SerializeField] private Tilemap floorTilemap;
-    [SerializeField] private Tilemap decorTilemap;
-    [SerializeField] private GameObject highlighter;
-    [SerializeField] private PlayerStats playerStats;
-
-    // Grabs a reference to the movementSpinner attached to the Character gameobject
-    [SerializeField] private GameObject movementSpinner;
-
-
+       
     private Vector3Int gridPosition;
-
-    [SerializeField] private float movementSpeed = 1f;
-    [SerializeField] private float spinSpeed;
+        
+    public float movementSpinnerSpeed;
 
     private Vector3 spinnerStartPosition;
     private Quaternion spinnerStartRotation;
@@ -40,8 +37,14 @@ public class PlayerController : MonoBehaviour
 
     private void Start()
     {
-        actionsPerTurn = playerStats.actionsPerTurn;
+        actionsPerTurn = playerData.actionsPerTurn;
+        gridManager = GameManager.instance.gridManager;
+        floorTilemap = GameManager.instance.floorTilemap;
+        decorTilemap = GameManager.instance.decorTilemap;
+        highlighter = GameManager.instance.highlighter;
+
         ResetActions();
+
         spinnerStartPosition = movementSpinner.transform.localPosition;
         spinnerStartRotation = movementSpinner.transform.localRotation;        
         Collider2D spinnerCollider = movementSpinner.GetComponent<CircleCollider2D>();
@@ -167,7 +170,7 @@ public class PlayerController : MonoBehaviour
 
     private void RotateSpinner()
     {
-        movementSpinner.transform.RotateAround(transform.position, Vector3.forward, Time.deltaTime * spinSpeed);
+        movementSpinner.transform.RotateAround(transform.position, Vector3.forward, Time.deltaTime * movementSpinnerSpeed);
         HighlightCheck(movementSpinner.transform.position);
     }
 
@@ -238,7 +241,7 @@ public class PlayerController : MonoBehaviour
         transform.position = attackPosition;
 
         // Deal Damage
-        float damageAmount = Random.Range(1, 13);
+        float damageAmount = playerData.GetRandomDamage();
         enemy.GetComponent<EnemyStats>().TakeDamage(damageAmount);
         // Debug.Log("I did " + damageAmount + " damage to " + enemy.name);
 
