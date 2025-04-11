@@ -52,6 +52,10 @@ MonoBehaviour:
   maxHealth: 30
   healthBar: {fileID: 0}
   actionsPerTurn: 1
+  floatingTextPrefab: {fileID: 7987917236184173770, guid: ec9790c6f684cbe4786a840551fd2ce9, type: 3}
+  worldCanvas: {fileID: 114939470277234059}
+  playerStats: {fileID: 0}
+  xpToGive: 10
 --- !u!114 &8384323062002602673
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -366,7 +370,7 @@ Canvas:
   m_OverridePixelPerfect: 0
   m_SortingBucketNormalizedSize: 0
   m_VertexColorAlwaysGammaSpace: 0
-  m_AdditionalShaderChannelsFlag: 0
+  m_AdditionalShaderChannelsFlag: 25
   m_UpdateRectTransformForStandalone: 0
   m_SortingLayerID: -965504925
   m_SortingOrder: 0

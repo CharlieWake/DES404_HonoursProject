@@ -13,7 +13,7 @@ public class EnemyMovement : MonoBehaviour
 
 
     [SerializeField] private float movementSpeed = 1f;
-    [SerializeField] private float pauseBetweenTiles = 0.5f;
+    [SerializeField] private float pauseBetweenTiles = 1f;
     private int actionsPerTurn;
 
 
@@ -32,6 +32,7 @@ public class EnemyMovement : MonoBehaviour
     public IEnumerator TakeTurn()
     {
         int actionsRemaining = actionsPerTurn;
+        path = null;
 
         while (actionsRemaining > 0)
         {
@@ -40,6 +41,7 @@ public class EnemyMovement : MonoBehaviour
             {
                 AttackPlayer();
                 actionsRemaining--;
+                yield return new WaitForSeconds(0.5f);
             }
             else
             {
@@ -105,10 +107,7 @@ public class EnemyMovement : MonoBehaviour
 
     void AttackPlayer()
     {
-        Debug.Log("Next to Player, I now Attack!");
-        int damageAmount = Random.Range(1, 7);
-        playerCharacter.GetComponent<PlayerStats>().TakeDamage(damageAmount);
-        Debug.Log("I dealt " + damageAmount + " to the player");
+        StartCoroutine(AttackAnimation());
     }
 
     public void RemoveEnemy()
@@ -116,4 +115,44 @@ public class EnemyMovement : MonoBehaviour
         gridManager.SetTileAsOccupied(enemyPosition, false);
         TurnManager.instance.RemoveEnemy(this);
     }
+
+    IEnumerator AttackAnimation()
+    {
+        Vector3 originalPosition = transform.position;
+        Vector3 targetPosition = playerCharacter.transform.position;
+
+        Vector3 attackPosition = Vector3.Lerp(originalPosition, targetPosition, 0.2f);
+
+        float animSpeed = 10f;
+        float elapsedTime = 0f;
+
+        // Lunge Forward
+        while (elapsedTime < 0.1f)
+        {
+            transform.position = Vector3.Lerp(originalPosition, attackPosition, elapsedTime * animSpeed);
+            elapsedTime += Time.deltaTime;
+            yield return null;
+        }
+
+        transform.position = attackPosition;
+
+        // Debug.Log("Next to Player, I now Attack!");
+        float damageAmount = Random.Range(1, 7);
+        playerCharacter.GetComponent<PlayerStats>().TakeDamage(damageAmount);
+        // Debug.Log("I dealt " + damageAmount + " to the player");
+
+        yield return new WaitForSeconds(0.05f);
+
+        // Move Back
+        elapsedTime = 0f;
+        while (elapsedTime < 0.1f)
+        {
+            transform.position = Vector3.Lerp(attackPosition, originalPosition, elapsedTime * animSpeed);
+            elapsedTime += Time.deltaTime;
+            yield return null;
+        }
+
+        transform.position = originalPosition;
+    }
+
 }

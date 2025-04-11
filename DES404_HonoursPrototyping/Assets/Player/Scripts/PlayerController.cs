@@ -209,14 +209,53 @@ public class PlayerController : MonoBehaviour
     }
 
     private void AttackEnemy(GameObject enemy)
-    {
-        int damageAmount = Random.Range(1, 13);
-        enemy.GetComponent<EnemyStats>().TakeDamage(20);
-        Debug.Log("I did " + damageAmount + " damage to " + enemy.name);
+    {       
 
         takingAction = true;
         remainingActions--;
 
+        StartCoroutine(AttackAnimation(enemy));
+    }  
+    
+    IEnumerator AttackAnimation(GameObject enemy)
+    {
+        Vector3 originalPosition = transform.position;
+        Vector3 targetPosition = enemy.transform.position;
+
+        Vector3 attackPosition = Vector3.Lerp(originalPosition, targetPosition, 0.2f);
+
+        float animSpeed = 10f;
+        float elapsedTime = 0f;
+
+        // Lunge Forward
+        while (elapsedTime < 0.1f)
+        {
+            transform.position = Vector3.Lerp(originalPosition, attackPosition, elapsedTime * animSpeed);
+            elapsedTime += Time.deltaTime;
+            yield return null;
+        }
+
+        transform.position = attackPosition;
+
+        // Deal Damage
+        float damageAmount = Random.Range(1, 13);
+        enemy.GetComponent<EnemyStats>().TakeDamage(damageAmount);
+        // Debug.Log("I did " + damageAmount + " damage to " + enemy.name);
+
+        yield return new WaitForSeconds(0.05f);
+
+        // Move Back
+        elapsedTime = 0f;
+        while (elapsedTime < 0.1f)
+        {
+            transform.position = Vector3.Lerp(attackPosition, originalPosition, elapsedTime * animSpeed);
+            elapsedTime += Time.deltaTime;
+            yield return null;
+        }
+
+        transform.position = originalPosition;
+                
+        // Turn End Logic
         if (remainingActions > 0)
         {
             takingAction = false;
@@ -225,5 +264,5 @@ public class PlayerController : MonoBehaviour
         {
             Invoke("EndPlayerTurn", 1f);
         }
-    }   
+    }    
 }
