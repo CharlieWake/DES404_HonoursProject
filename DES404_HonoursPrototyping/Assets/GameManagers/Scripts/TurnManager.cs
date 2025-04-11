@@ -4,16 +4,15 @@ using UnityEngine;
 using Cinemachine;
 
 public class TurnManager : MonoBehaviour
-{
-        
+{        
     public static TurnManager instance;
 
-    [SerializeField] private CinemachineVirtualCamera virtualCamera;
-    [SerializeField] private GameObject playerCharacter;
-    [SerializeField] private PlayerController playerControllerScript;
+    private CinemachineVirtualCamera virtualCamera;
+    private GameObject playerCharacter;
+    private PlayerController playerControllerScript;
 
     // Creates a new List of type EnemyMovement script and creates it when the game starts.
-    private List<EnemyMovement> enemies = new List<EnemyMovement>();
+    private List<EnemyBehaviour> enemies = new List<EnemyBehaviour>();
 
     public bool isPlayerTurn = true;
 
@@ -28,9 +27,17 @@ public class TurnManager : MonoBehaviour
         // If there is, it destroys this game object
         // Otherwise, this object becomes the instance
         // This is called a Singleton, used for things like GameManagers where you would only want one instance of the object active in your game (like this TurnManager)
+
+        virtualCamera = GetComponentInChildren<CinemachineVirtualCamera>();
     }
 
-    public void FindAllEnemies(EnemyMovement enemy)
+    private void Start()
+    {
+        playerCharacter = GameManager.instance.playerCharacter;
+        playerControllerScript = playerCharacter.GetComponent<PlayerController>();
+    }
+
+    public void FindAllEnemies(EnemyBehaviour enemy)
     {
         enemies.Add(enemy);
 
@@ -39,7 +46,7 @@ public class TurnManager : MonoBehaviour
         // This is called from the enemy's 'EnemyMovement' script
     }
 
-    public void RemoveEnemy(EnemyMovement enemy)
+    public void RemoveEnemy(EnemyBehaviour enemy)
     {
         enemies.Remove(enemy);
     }
@@ -68,7 +75,7 @@ public class TurnManager : MonoBehaviour
     {
         isPlayerTurn = false;
 
-        foreach (EnemyMovement enemy in enemies)
+        foreach (EnemyBehaviour enemy in enemies)
         {
             virtualCamera.Follow = enemy.transform;
             yield return enemy.TakeTurn();

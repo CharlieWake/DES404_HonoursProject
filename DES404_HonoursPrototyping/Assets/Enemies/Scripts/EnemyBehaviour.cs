@@ -3,18 +3,20 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Tilemaps;
 
-public class EnemyMovement : MonoBehaviour
+public class EnemyBehaviour : MonoBehaviour
 {
-    [SerializeField] private Tilemap floorTilemap;
-    [SerializeField] private GridManager gridManager;
-    [SerializeField] private Pathfinding pathfinding;
-    [SerializeField] private Transform playerCharacter;
-    [SerializeField] private EnemyStats enemyStats;
+    private GridManager gridManager;
+    private Pathfinding pathfinding;
+    private TurnManager turnManager;
+    private Transform playerCharacter;
+    private Tilemap floorTilemap;
 
+    [SerializeField] private EnemyData enemyData;
+    private EnemyStats enemyStats;
 
-    [SerializeField] private float movementSpeed = 1f;
-    [SerializeField] private float pauseBetweenTiles = 1f;
-    private int actionsPerTurn;
+    
+    private float gridMovementSpeed = 1.5f;
+    private float pauseBetweenActions = 1f;
 
 
     private Vector3Int enemyPosition;
@@ -23,15 +25,22 @@ public class EnemyMovement : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        gridManager = GameManager.instance.gridManager;
+        turnManager = GameManager.instance.turnManager;
+        playerCharacter = GameManager.instance.playerCharacter.transform;
+        floorTilemap = GameManager.instance.floorTilemap;
+
+        enemyStats = GetComponent<EnemyStats>();
+        pathfinding = GetComponent<Pathfinding>();
+
         TurnManager.instance.FindAllEnemies(this);
-        actionsPerTurn = enemyStats.actionsPerTurn;
         enemyPosition = floorTilemap.WorldToCell(transform.position);
         gridManager.SetTileAsOccupied(enemyPosition, true);
     }
 
     public IEnumerator TakeTurn()
     {
-        int actionsRemaining = actionsPerTurn;
+        int actionsRemaining = enemyData.actionsPerTurn;
         path = null;
 
         while (actionsRemaining > 0)
@@ -79,7 +88,7 @@ public class EnemyMovement : MonoBehaviour
             }
 
             actionsRemaining--;
-            yield return new WaitForSeconds(pauseBetweenTiles);
+            yield return new WaitForSeconds(pauseBetweenActions);
         }
 
         // At the start of its turn, an enemy uses the getAdjacentTiles method from the GridManager script
@@ -93,9 +102,9 @@ public class EnemyMovement : MonoBehaviour
         Vector3 startPosition = transform.position;
         float elapsedTime = 0f;
 
-        while (elapsedTime < 1f / movementSpeed)
+        while (elapsedTime < 1f / gridMovementSpeed)
         {
-            transform.position = Vector3.Lerp(startPosition, targetPosition, elapsedTime * movementSpeed);
+            transform.position = Vector3.Lerp(startPosition, targetPosition, elapsedTime * gridMovementSpeed);
             elapsedTime += Time.deltaTime;
             yield return null;
         }

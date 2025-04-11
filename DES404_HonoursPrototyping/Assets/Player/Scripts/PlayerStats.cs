@@ -89,9 +89,9 @@ public class PlayerStats : MonoBehaviour
         healthText.text = currentHealth + " / " + maxHealth;
     }
 
-    public void AddXP(float XPValue)
+    public void AddExperience(float experienceValue)
     {
-        currentExperience += XPValue;
+        currentExperience += experienceValue;
     }
 
 }

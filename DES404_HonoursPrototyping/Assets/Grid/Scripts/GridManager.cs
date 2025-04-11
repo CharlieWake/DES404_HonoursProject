@@ -6,7 +6,7 @@ using UnityEngine.Tilemaps;
 public class GridManager : MonoBehaviour
 {
 
-    [SerializeField] private Tilemap floorTilemap;
+    private Tilemap floorTilemap;
     public Dictionary<Vector3Int, bool> walkableTiles = new Dictionary<Vector3Int, bool>();
     // Creates a new dictionary with two values to store a list of walkable tiles
     // The two values are a Vector3Int which will be the coordinates of the walkable tile
@@ -19,6 +19,7 @@ public class GridManager : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        floorTilemap = GameManager.instance.floorTilemap;
         InitializeGrid();
     }
 

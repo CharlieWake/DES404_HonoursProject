@@ -6,8 +6,12 @@ using UnityEngine.Tilemaps;
 public class Pathfinding : MonoBehaviour
 {
 
-    [SerializeField] private GridManager gridManager;
-    [SerializeField] private Tilemap floorTilemap;
+    private GridManager gridManager;
+    
+        private void Start()
+    {
+        gridManager = GameManager.instance.gridManager;        
+    }
 
     public List<Vector3Int> FindPath(Vector3Int startPosition, Vector3Int targetPosition)
     {

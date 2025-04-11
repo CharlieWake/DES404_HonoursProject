@@ -14,7 +14,7 @@ GameObject:
   - component: {fileID: 2741828362048693730}
   - component: {fileID: 5651548929531561889}
   m_Layer: 6
-  m_Name: Enemy
+  m_Name: Enemy_GenericBase
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -49,13 +49,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 249d4067ad4ebfa49adf9166faf40aef, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  maxHealth: 30
-  healthBar: {fileID: 0}
+  enemyData: {fileID: 0}
+  currentHealth: 0
   actionsPerTurn: 1
-  floatingTextPrefab: {fileID: 7987917236184173770, guid: ec9790c6f684cbe4786a840551fd2ce9, type: 3}
-  worldCanvas: {fileID: 114939470277234059}
-  playerStats: {fileID: 0}
-  xpToGive: 10
 --- !u!114 &8384323062002602673
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -68,8 +64,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 83220d0ebec6b114398c092646bbb740, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  gridManager: {fileID: 0}
-  floorTilemap: {fileID: 0}
 --- !u!114 &2741828362048693730
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -82,13 +76,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4e21891e21671fc4aa5a8ba907864564, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  floorTilemap: {fileID: 0}
-  gridManager: {fileID: 0}
-  pathfinding: {fileID: 8384323062002602673}
-  playerCharacter: {fileID: 0}
-  enemyStats: {fileID: 8352582874895123938}
-  movementSpeed: 1.5
-  pauseBetweenTiles: 0.5
+  enemyData: {fileID: 0}
 --- !u!61 &5651548929531561889
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -326,7 +314,7 @@ GameObject:
   - component: {fileID: 6100891695489732647}
   - component: {fileID: 2691485603893178134}
   m_Layer: 5
-  m_Name: Canvas
+  m_Name: EnemyCanvas
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -601,12 +589,12 @@ SpriteRenderer:
   m_SortingLayerID: -135196781
   m_SortingLayer: 1
   m_SortingOrder: 0
-  m_Sprite: {fileID: -3402451715102035049, guid: d71bd542730d5b44faf36d41df99ae6a, type: 3}
+  m_Sprite: {fileID: -5177388603050735206, guid: cc35afd292fc349128b36a291fb3a165, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
-  m_Size: {x: 1, y: 1}
+  m_Size: {x: 0.32, y: 0.32}
   m_AdaptiveModeThreshold: 0.5
   m_SpriteTileMode: 0
   m_WasSpriteAssigned: 1
