@@ -42,6 +42,12 @@ TagManager:
   - name: Default
     uniqueID: 0
     locked: 0
+  - name: Background
+    uniqueID: 2286475311
+    locked: 0
+  - name: Tilemap
+    uniqueID: 1059191593
+    locked: 0
   - name: Enemies
     uniqueID: 4159770515
     locked: 0
@@ -50,6 +56,9 @@ TagManager:
     locked: 0
   - name: Character
     uniqueID: 1716900379
+    locked: 0
+  - name: Dust
+    uniqueID: 1559244795
     locked: 0
   - name: Game UI
     uniqueID: 3329462371
