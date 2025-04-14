@@ -1,10 +1,10 @@
 fileFormatVersion: 2
-guid: a12490f329135b8449351c5be728185a
+guid: 14463e69fafc5b645bfbefab5b47a786
 TextureImporter:
   internalIDToNameTable:
   - first:
-      213: 5857616353119703301
-    second: groundtorch2_0
+      213: -5551748481088555356
+    second: panel_brown_arrows_dark_0
   externalObjects: {}
   serializedVersion: 13
   mipmaps:
@@ -126,13 +126,13 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: groundtorch2_0
+      name: panel_brown_arrows_dark_0
       rect:
         serializedVersion: 2
         x: 0
         y: 0
-        width: 9
-        height: 13
+        width: 128
+        height: 128
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -140,8 +140,8 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: 5011836c90f6a4150800000000000000
-      internalID: 5857616353119703301
+      spriteID: 4a6f66ebb2a34f2b0800000000000000
+      internalID: -5551748481088555356
       vertices: []
       indices: 
       edges: []
@@ -156,8 +156,7 @@ TextureImporter:
     edges: []
     weights: []
     secondaryTextures: []
-    nameFileIdTable:
-      groundtorch2_0: 5857616353119703301
+    nameFileIdTable: {}
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

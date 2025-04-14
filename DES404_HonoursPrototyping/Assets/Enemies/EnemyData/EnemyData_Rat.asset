@@ -9,13 +9,11 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 0c621354f28aa354eb1e5ef5e8866dd0, type: 3}
-  m_Name: WarriorClass
+  m_Script: {fileID: 11500000, guid: d4bf04b6b000b9c48ab16999a0a03c72, type: 3}
+  m_Name: EnemyData_Rat
   m_EditorClassIdentifier: 
-  playerClass: Warrior
-  maxHealth: 20
+  enemyName: Spider
+  maxHealth: 12
   actionsPerTurn: 1
-  experienceToLevelUp: 100
-  playerLevel: 0
-  minDamage: 1
-  maxDamage: 13
+  experienceToGive: 3
+  damageAmount: 3
