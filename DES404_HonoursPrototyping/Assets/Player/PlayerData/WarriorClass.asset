@@ -15,7 +15,7 @@ MonoBehaviour:
   playerClass: Warrior
   maxHealth: 20
   actionsPerTurn: 1
-  experienceToLevelUp: 100
+  experienceToLevelUp: 15
   playerLevel: 0
-  minDamage: 1
-  maxDamage: 13
+  minDamage: 15
+  maxDamage: 16

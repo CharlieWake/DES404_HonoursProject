@@ -8,6 +8,6 @@ public class EnemyData : ScriptableObject
     public string enemyName;
     public float maxHealth;
     public int actionsPerTurn;
-    public float experienceToGive;
+    public int experienceToGive;
     public float damageAmount;
 }

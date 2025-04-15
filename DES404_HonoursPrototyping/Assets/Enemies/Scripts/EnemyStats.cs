@@ -10,6 +10,7 @@ public class EnemyStats : MonoBehaviour
     Transform enemyCanvas;
     GameObject floatingTextPrefab;
     FloatingHealthBar healthBar;
+    GameObject expGemPrefab;
 
     [Header("Stats")]
     [SerializeField] private float currentHealth;
@@ -36,6 +37,13 @@ public class EnemyStats : MonoBehaviour
         {
             Debug.LogError("FloatingDamageTextPrefab could not be loaded from Resources!");
         }
+
+        expGemPrefab = Resources.Load<GameObject>("ExpGems/ExperienceGem");
+
+        if (expGemPrefab == null)
+        {
+            Debug.LogError("ExperienceGemPrefab could not be loaded from Resources!");
+        }
     }
 
     // Start is called before the first frame update
@@ -60,9 +68,11 @@ public class EnemyStats : MonoBehaviour
 
     private void Death()
     {
-        GetComponent<EnemyBehaviour>().RemoveEnemy();
-        GameManager.instance.playerStats.AddExperience(enemyData.experienceToGive);
-        Destroy(gameObject);
+        healthBar.gameObject.SetActive(false);
+        StartCoroutine(DeathEvent());
+        //GetComponent<EnemyBehaviour>().RemoveEnemy();
+        // GameManager.instance.playerStats.AddExperience(enemyData.experienceToGive);
+        //Destroy(gameObject);
     }
 
     IEnumerator DamageFlash(SpriteRenderer spriteRenderer)
@@ -79,5 +89,46 @@ public class EnemyStats : MonoBehaviour
         Vector3 screenPosition = Camera.main.WorldToScreenPoint(worldPosition + Vector3.up * 0.5f);
         GameObject textObject = Instantiate(floatingTextPrefab, worldPosition, Quaternion.identity, enemyCanvas);
         textObject.GetComponent<FloatingDamageText>().setText(damageAmount);
+    }
+
+    IEnumerator DeathEvent()
+    {
+        
+        
+        yield return StartCoroutine(FadeOutEnemy(1f));
+
+        Vector3 spawnPosition = Camera.main.WorldToScreenPoint(transform.position);
+
+        for (int i = 0; i < enemyData.experienceToGive; i++)
+        {
+            GameObject expGem = Instantiate(expGemPrefab, spawnPosition, Quaternion.identity, GameObject.Find("HUD").transform);
+            expGem.GetComponent<ExpGemScript>().Initialize(spawnPosition);
+            yield return new WaitForSeconds(Random.Range(0.05f, 0.15f));
+        }
+
+        GetComponent<EnemyBehaviour>().RemoveEnemy();
+        Destroy(gameObject);
+    }
+
+    IEnumerator FadeOutEnemy(float fadeDuration)
+    {
+        float fadeElapsed = 0f;
+        Color originalColor = spriteRenderer.color;
+
+        while (fadeElapsed < fadeDuration)
+        {
+            fadeElapsed += Time.deltaTime;
+            float alpha = Mathf.Lerp(1f, 0f, fadeElapsed / fadeDuration);
+            Color newColor = originalColor;
+            newColor.a = alpha;
+            spriteRenderer.color = newColor;
+
+            yield return null;
+        }
+
+        
+        Color finalColor = originalColor;
+        finalColor.a = 0f;
+        spriteRenderer.color = finalColor;
     }
 }

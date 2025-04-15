@@ -6,6 +6,7 @@ using TMPro;
 
 public class PlayerStats : MonoBehaviour
 {
+       
     [Header("Components")]
     [SerializeField] private PlayerData playerData;
     SpriteRenderer spriteRenderer;
@@ -13,7 +14,7 @@ public class PlayerStats : MonoBehaviour
     Transform playerCanvas;
 
     private float currentHealth;
-    private float currentExperience;    
+    public float currentExperience;    
     private int playerLevel;
 
     [Header("UI")]
@@ -23,6 +24,7 @@ public class PlayerStats : MonoBehaviour
      
     private void Awake()
     {
+               
         spriteRenderer = GetComponentInChildren<SpriteRenderer>();
         playerCanvas = transform.Find("PlayerCanvas");
 
@@ -58,6 +60,16 @@ public class PlayerStats : MonoBehaviour
         StartCoroutine(DamageFlash(spriteRenderer));
         FloatingDamageText(damageAmount.ToString(), transform.position);
         UpdateHealthText(currentHealth, playerData.maxHealth);
+
+        GameObject targetObject = GameObject.Find("HealthBar");
+        if (targetObject != null)
+        {
+            UIShake shaker = targetObject.GetComponent<UIShake>();
+            if (shaker != null)
+            {
+                shaker.TriggerShake(0.2f); // You can tweak this time
+            }
+        }
 
         if (currentHealth <= 0)
         {

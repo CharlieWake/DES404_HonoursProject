@@ -265,7 +265,7 @@ public class PlayerController : MonoBehaviour
         }
         else
         {
-            Invoke("EndPlayerTurn", 1f);
+            Invoke("EndPlayerTurn", 2f);
         }
     }    
 }

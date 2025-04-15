@@ -181,6 +181,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   playerData: {fileID: 11400000, guid: 15a42c2ef4e34cf439f76c261b0791e8, type: 2}
+  currentExperience: 0
   healthBar: {fileID: 0}
   experienceBar: {fileID: 0}
   healthText: {fileID: 0}
