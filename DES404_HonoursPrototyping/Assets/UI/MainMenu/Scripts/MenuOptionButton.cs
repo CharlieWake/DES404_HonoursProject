@@ -3,15 +3,38 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
+using UnityEngine.SceneManagement;
 
 public class MenuOptionButton : MonoBehaviour
 {
     public string optionName;
+    [SerializeField] private MenuSpinnerController MenuSpinnerController;
+
+    public Transform canvas;
+    public Transform mainMenuCircle;
+    public Transform spinnerSpeedCircle;
+    public Transform pauseMenuCircle;
+
+    private void Start()
+    {
+        
+
+        if (SceneManager.GetActiveScene().name == "MainMenu")
+        {
+            canvas = GameObject.Find("MenuCanvas").transform;
+            mainMenuCircle = canvas.Find("MainMenuCircle");
+            spinnerSpeedCircle = canvas.Find("SpinnerSpeedCircle");
+        }
+        else
+        {
+            canvas = GameObject.Find("HUD").transform;
+            pauseMenuCircle = canvas.Find("PauseMenuPanel/PauseMenuCircle");
+            spinnerSpeedCircle = canvas.Find("SpinnerSpeedCircle");
+        }
+    }
 
     public void Press()
-    {
-        Debug.Log("Press on Menu Option Button Triggered");
-        
+    {              
         switch (optionName)
         {
             case "Start":
@@ -21,7 +44,37 @@ public class MenuOptionButton : MonoBehaviour
                 Application.Quit();
                 break;
             case "SpinnerSpeed":
-                Debug.Log("Setting Spinner Speed");
+                // Debug.Log("Setting Spinner Speed");
+                if (SceneManager.GetActiveScene().name == "MainMenu")
+                {
+                    mainMenuCircle.gameObject.SetActive(false);
+                    spinnerSpeedCircle.gameObject.SetActive(true);
+                    break;
+                }
+                else
+                {
+                    pauseMenuCircle.gameObject.SetActive(false);
+                    spinnerSpeedCircle.gameObject.SetActive(true);
+                    break;
+                }                    
+            case "SlowSpeed":
+                MenuSpinnerController.spinSpeed = -30f;
+                break;
+            case "NormalSpeed":
+                MenuSpinnerController.spinSpeed = -50f;
+                break;
+            case "FastSpeed":
+                MenuSpinnerController.spinSpeed = -70f;
+                break;
+            case "ReturnMainMenu":
+                spinnerSpeedCircle.gameObject.SetActive(false);
+                pauseMenuCircle.gameObject.SetActive(true);                
+                break;
+            case "QuitLevel":
+                UnityEngine.SceneManagement.SceneManager.LoadScene("MainMenu");
+                break;
+            case "ResumeGame":
+                GameManager.instance.UnpauseGame();
                 break;
             default:
                 Debug.LogWarning("Unknown menu option");

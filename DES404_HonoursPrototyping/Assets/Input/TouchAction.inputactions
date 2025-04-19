@@ -11,7 +11,7 @@
                     "id": "9376a95c-8dc2-4c7b-8acd-0e23befea94c",
                     "expectedControlType": "Button",
                     "processors": "",
-                    "interactions": "",
+                    "interactions": "Tap,Hold(duration=2)",
                     "initialStateCheck": false
                 }
             ],
@@ -30,7 +30,7 @@
                 {
                     "name": "",
                     "id": "f3f625a6-2ac9-4e9a-bf1b-979c886c7fb3",
-                    "path": "<Keyboard>/space",
+                    "path": "<Keyboard>/anyKey",
                     "interactions": "",
                     "processors": "",
                     "groups": "",

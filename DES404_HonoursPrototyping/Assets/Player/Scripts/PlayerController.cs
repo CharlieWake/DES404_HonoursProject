@@ -53,7 +53,7 @@ public class PlayerController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (TurnManager.instance.IsPlayerTurn() && !takingAction)
+        if (TurnManager.instance.IsPlayerTurn() && !takingAction && !GameManager.instance.isGamePaused)
         {
             movementSpinner.SetActive(true);
             highlighter.SetActive(true);
@@ -267,5 +267,33 @@ public class PlayerController : MonoBehaviour
         {
             Invoke("EndPlayerTurn", 2f);
         }
-    }    
+    }
+
+    public void HideMovementSpinner()
+    {
+        movementSpinner.GetComponent<SpriteRenderer>().enabled = false;
+        foreach (Transform child in movementSpinner.transform)
+        {
+            SpriteRenderer childRenderer = child.GetComponent<SpriteRenderer>();
+            if (childRenderer != null)
+            {
+                childRenderer.enabled = false;
+                break;
+            }
+        }
+    }
+
+    public void ShowMovementSpinner()
+    {
+        movementSpinner.GetComponent<SpriteRenderer>().enabled = true;
+        foreach (Transform child in movementSpinner.transform)
+        {
+            SpriteRenderer childRenderer = child.GetComponent<SpriteRenderer>();
+            if (childRenderer != null)
+            {
+                childRenderer.enabled = true;
+                break;
+            }
+        }
+    }
 }

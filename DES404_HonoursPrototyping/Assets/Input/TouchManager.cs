@@ -35,9 +35,23 @@ public class TouchManager : MonoBehaviour
 
     private void TouchPressed(InputAction.CallbackContext context)
     {
-        if (turnManager.isPlayerTurn == true)
+        if (context.performed)
         {
-            playerControllerScript.PlayerAction();
-        }        
-    }
+            if (context.interaction is UnityEngine.InputSystem.Interactions.HoldInteraction)
+            {
+                if (turnManager.isPlayerTurn == true && !GameManager.instance.isGamePaused)
+                {
+                    Debug.Log("PAUSING");
+                    GameManager.instance.PauseGame();
+                }                    
+            }
+            else if(context.interaction is UnityEngine.InputSystem.Interactions.TapInteraction)
+            {
+                if (turnManager.isPlayerTurn == true && !GameManager.instance.isGamePaused)
+                {
+                    playerControllerScript.PlayerAction();
+                }
+            }
+        }             
+    }  
 }

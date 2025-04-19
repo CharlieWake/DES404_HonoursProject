@@ -5,13 +5,20 @@ using UnityEngine;
 public class MenuSpinnerController : MonoBehaviour
 {
     public float orbitRadius = 140f;
-    public float orbitSpeed = -60f; // degrees per second
+    public float spinSpeed = -60f;
 
     private float currentAngle = 0f;
     private RectTransform rectTransform;
     private RectTransform centerRect;
 
     private MenuOptionButton currentButton;
+    private ButtonPulse buttonPulse;
+
+    public float buttonPulseSpeed = 2f;
+    public float minPulseScale = 0.95f;
+    public float maxPulseScale = 1.05f;
+
+
 
     void Start()
     {
@@ -21,7 +28,7 @@ public class MenuSpinnerController : MonoBehaviour
 
     void Update()
     {
-        currentAngle += orbitSpeed * Time.deltaTime;
+        currentAngle += spinSpeed * Time.unscaledDeltaTime;
         float radians = currentAngle * Mathf.Deg2Rad;
 
         // Orbit position (around center)
@@ -34,30 +41,27 @@ public class MenuSpinnerController : MonoBehaviour
         Vector2 directionFromCenter = rectTransform.anchoredPosition.normalized;
         float angle = Mathf.Atan2(directionFromCenter.y, directionFromCenter.x) * Mathf.Rad2Deg;
         rectTransform.rotation = Quaternion.Euler(0f, 0f, angle + 90f);
-
     }
 
     private void OnTriggerEnter2D(Collider2D other)
     {
         currentButton = other.GetComponent<MenuOptionButton>();
-        if (currentButton != null)
-        {
-            Debug.Log("Button Entered: " + currentButton.name);
-        }
+        buttonPulse = other.GetComponent<ButtonPulse>();
+        buttonPulse.isSelected = true;
+        Debug.Log("Entered a button!");
     }
 
     private void OnTriggerExit2D(Collider2D other)
     {
         if (currentButton != null && other.gameObject == currentButton.gameObject)
         {
-            Debug.Log("Button Exited: " + currentButton.name);
             currentButton = null;
+            buttonPulse.isSelected = false;
         }
     }
 
     public void ButtonPress()
     {
-        Debug.Log("Pressing");
         currentButton?.Press();
     }
 }
