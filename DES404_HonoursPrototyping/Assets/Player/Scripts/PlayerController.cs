@@ -15,7 +15,9 @@ public class PlayerController : MonoBehaviour
 {
     [Header("Components")]
     [SerializeField] private PlayerData playerData;
+    [SerializeField] private PlayerLevelUpData playerLevelUpData;
     [SerializeField] private GameObject movementSpinner;
+    private PlayerStats playerStats;
     private GridManager gridManager;
     private Tilemap floorTilemap;
     private Tilemap decorTilemap;
@@ -23,7 +25,7 @@ public class PlayerController : MonoBehaviour
 
     private float movementSpeed = 1.5f;
     private int actionsPerTurn;
-    private int remainingActions;
+    [SerializeField] private int remainingActions;
        
     private Vector3Int gridPosition;
         
@@ -37,13 +39,11 @@ public class PlayerController : MonoBehaviour
 
     private void Start()
     {
-        actionsPerTurn = playerData.actionsPerTurn;
+        playerStats = GetComponent<PlayerStats>();
         gridManager = GameManager.instance.gridManager;
         floorTilemap = GameManager.instance.floorTilemap;
         decorTilemap = GameManager.instance.decorTilemap;
         highlighter = GameManager.instance.highlighter;
-
-        ResetActions();
 
         spinnerStartPosition = movementSpinner.transform.localPosition;
         spinnerStartRotation = movementSpinner.transform.localRotation;        
@@ -208,7 +208,7 @@ public class PlayerController : MonoBehaviour
 
     public void ResetActions()
     {
-        remainingActions = actionsPerTurn;
+        remainingActions = playerStats.actionsPerTurn;
     }
 
     private void AttackEnemy(GameObject enemy)

@@ -17,5 +17,5 @@ MonoBehaviour:
   actionsPerTurn: 1
   experienceToLevelUp: 15
   playerLevel: 0
-  minDamage: 15
-  maxDamage: 16
+  minDamage: 1
+  maxDamage: 13

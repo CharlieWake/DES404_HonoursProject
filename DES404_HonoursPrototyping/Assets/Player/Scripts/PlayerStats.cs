@@ -9,13 +9,17 @@ public class PlayerStats : MonoBehaviour
        
     [Header("Components")]
     [SerializeField] private PlayerData playerData;
+    [SerializeField] private PlayerLevelUpData playerLevelUpData;
+    private PlayerController playerController;
     SpriteRenderer spriteRenderer;
     GameObject floatingTextPrefab;
     Transform playerCanvas;
 
     private float currentHealth;
-    public float currentExperience;    
-    private int playerLevel;
+    public float currentExperience = 0f;
+    private int playerLevel = 1;
+    private float maxHealth;
+    public int actionsPerTurn;
 
     [Header("UI")]
     [SerializeField] private Image healthBar;
@@ -27,6 +31,7 @@ public class PlayerStats : MonoBehaviour
                
         spriteRenderer = GetComponentInChildren<SpriteRenderer>();
         playerCanvas = transform.Find("PlayerCanvas");
+        playerController = GetComponent<PlayerController>();
 
         if (playerCanvas == null)
         {
@@ -43,15 +48,23 @@ public class PlayerStats : MonoBehaviour
 
     // Start is called before the first frame update
     void Start()
-    {
-        currentHealth = playerData.maxHealth;
-        UpdateHealthText(currentHealth, playerData.maxHealth);
+    {               
+        var levelInfo = playerLevelUpData.GetLevelInfo(playerLevel);
+        if (levelInfo != null)
+        {
+            maxHealth = levelInfo.maxHealth;
+            currentHealth = maxHealth;
+        }      
+        UpdateHealthText(currentHealth, maxHealth);
+        actionsPerTurn = playerLevelUpData.GetLevelInfo(playerLevel).actionsPerTurn;
+        playerController.ResetActions();
     }
 
     private void Update()
     {
-        healthBar.fillAmount = currentHealth / playerData.maxHealth;
-        experienceBar.fillAmount = currentExperience / playerData.experienceToLevelUp;
+        float expToLevelUp = playerLevelUpData.GetLevelInfo(playerLevel)?.experienceToLevelUp ?? 1f;
+        healthBar.fillAmount = currentHealth / maxHealth;
+        experienceBar.fillAmount = currentExperience / expToLevelUp;
     }
 
     public void TakeDamage(float damageAmount)
@@ -59,7 +72,7 @@ public class PlayerStats : MonoBehaviour
         currentHealth -= damageAmount;
         StartCoroutine(DamageFlash(spriteRenderer));
         FloatingDamageText(damageAmount.ToString(), transform.position);
-        UpdateHealthText(currentHealth, playerData.maxHealth);
+        UpdateHealthText(currentHealth, maxHealth);
 
         GameObject targetObject = GameObject.Find("HealthBar");
         if (targetObject != null)
@@ -107,6 +120,31 @@ public class PlayerStats : MonoBehaviour
     public void AddExperience(float experienceValue)
     {
         currentExperience += experienceValue;
+        CheckForLevelUp();
+    }
+
+    private void CheckForLevelUp()
+    {
+        while (playerLevel < playerLevelUpData.maxLevel && currentExperience >= playerLevelUpData.GetLevelInfo(playerLevel).experienceToLevelUp)
+        {
+            currentExperience -= playerLevelUpData.GetLevelInfo(playerLevel).experienceToLevelUp;
+            playerLevel++;
+
+            var newLevelInfo = playerLevelUpData.GetLevelInfo(playerLevel);
+            float healthToHeal = (newLevelInfo.maxHealth - maxHealth);
+            maxHealth = newLevelInfo.maxHealth;
+            UpdateHealthText(currentHealth, maxHealth);
+            Heal(healthToHeal);
+
+            actionsPerTurn = newLevelInfo.actionsPerTurn;
+            // playerController.ResetActions();
+        }
+    }
+
+    public void Heal(float healAmount)
+    {
+        currentHealth += Mathf.Clamp(healAmount, 0, maxHealth);
+        UpdateHealthText(currentHealth, maxHealth);
     }
 
 }

@@ -146,7 +146,7 @@ public class EnemyBehaviour : MonoBehaviour
         transform.position = attackPosition;
 
         // Debug.Log("Next to Player, I now Attack!");
-        float damageAmount = Random.Range(1, 7);
+        float damageAmount = Random.Range(1, 4);
         playerCharacter.GetComponent<PlayerStats>().TakeDamage(damageAmount);
         // Debug.Log("I dealt " + damageAmount + " to the player");
 
