@@ -302,6 +302,7 @@ GameObject:
   - component: {fileID: 3954116448768177836}
   - component: {fileID: 1331511079521929618}
   - component: {fileID: 1138448685895209830}
+  - component: {fileID: 201529011284264236}
   m_Layer: 5
   m_Name: MenuOptionButton
   m_TagString: MenuButton
@@ -522,3 +523,15 @@ MonoBehaviour:
   glowImage: {fileID: 1556467325201033689}
   glowFadeSpeed: 5
   maxAlpha: 0.6
+--- !u!114 &201529011284264236
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8240939050888061304}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 38e963217658d674fa89711e535c2e4a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 

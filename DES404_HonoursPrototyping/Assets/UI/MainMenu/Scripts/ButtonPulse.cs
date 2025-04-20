@@ -16,16 +16,10 @@ public class ButtonPulse : MonoBehaviour
 
     private Color originalColour;
 
-    private float swayAmount = 1.5f;
-    private float swaySpeed = 1.25f;
-
-    private float startRotationZ;
-
     void Start()
     {
         originalScale = transform.localScale;
         targetScale = originalScale;
-        startRotationZ = transform.eulerAngles.z;
 
         // Ensure glowImage is assigned and initialize with no alpha (invisible)
         if (glowImage != null)
@@ -38,10 +32,6 @@ public class ButtonPulse : MonoBehaviour
 
     void Update()
     {
-        // Add wobble effect to the button
-        float sway = Mathf.Sin(Time.unscaledTime * swaySpeed) * swayAmount;
-        transform.rotation = Quaternion.Euler(0f, 0f, startRotationZ + sway);
-
         // Scale the button
         targetScale = isSelected ? originalScale * selectedScale : originalScale;
         transform.localScale = Vector3.MoveTowards(transform.localScale, targetScale, Time.unscaledDeltaTime * scaleSpeed);

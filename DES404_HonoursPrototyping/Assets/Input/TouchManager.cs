@@ -9,6 +9,7 @@ public class TouchManager : MonoBehaviour
     private InputAction touchPressAction;
 
     private PlayerController playerControllerScript;
+    [SerializeField] private PauseCharging pauseCharging;
     TurnManager turnManager;
 
     private void Awake()
@@ -25,27 +26,40 @@ public class TouchManager : MonoBehaviour
 
     private void OnEnable()
     {
+        touchPressAction.started += TouchStarted;
+        touchPressAction.canceled += TouchCancelled;
         touchPressAction.performed += TouchPressed;      
     }
 
     private void OnDisable()
     {
+        touchPressAction.started -= TouchStarted;
+        touchPressAction.canceled -= TouchCancelled;
         touchPressAction.performed -= TouchPressed;
     }
+
+    private void TouchStarted(InputAction.CallbackContext context)
+    {
+        if (context.interaction is UnityEngine.InputSystem.Interactions.HoldInteraction)
+        {
+            if (turnManager.isPlayerTurn == true && !playerControllerScript.takingAction)
+            {
+                pauseCharging.StartHold();
+            }            
+        }
+    }
+
+    private void TouchCancelled(InputAction.CallbackContext context)
+    {
+        pauseCharging.CancelHold();
+    }
+
 
     private void TouchPressed(InputAction.CallbackContext context)
     {
         if (context.performed)
-        {
-            if (context.interaction is UnityEngine.InputSystem.Interactions.HoldInteraction)
-            {
-                if (turnManager.isPlayerTurn == true && !GameManager.instance.isGamePaused)
-                {
-                    Debug.Log("PAUSING");
-                    GameManager.instance.PauseGame();
-                }                    
-            }
-            else if(context.interaction is UnityEngine.InputSystem.Interactions.TapInteraction)
+        {            
+            if(context.interaction is UnityEngine.InputSystem.Interactions.TapInteraction)
             {
                 if (turnManager.isPlayerTurn == true && !GameManager.instance.isGamePaused)
                 {
