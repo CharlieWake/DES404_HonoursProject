@@ -10,6 +10,7 @@ public class PlayerStats : MonoBehaviour
     [Header("Components")]
     [SerializeField] private PlayerData playerData;
     [SerializeField] private PlayerLevelUpData playerLevelUpData;
+    
     private PlayerController playerController;
     SpriteRenderer spriteRenderer;
     GameObject floatingTextPrefab;
@@ -25,7 +26,9 @@ public class PlayerStats : MonoBehaviour
     [SerializeField] private Image healthBar;
     [SerializeField] private Image experienceBar;
     [SerializeField] private TextMeshProUGUI healthText;
-     
+    [SerializeField] private ActionDots actionDots;
+    [SerializeField] private LevelUpText levelUpText;
+
     private void Awake()
     {
                
@@ -57,6 +60,9 @@ public class PlayerStats : MonoBehaviour
         }      
         UpdateHealthText(currentHealth, maxHealth);
         actionsPerTurn = playerLevelUpData.GetLevelInfo(playerLevel).actionsPerTurn;
+        actionDots.SetActionDotCount(actionsPerTurn);
+
+
         playerController.ResetActions();
     }
 
@@ -127,6 +133,10 @@ public class PlayerStats : MonoBehaviour
     {
         while (playerLevel < playerLevelUpData.maxLevel && currentExperience >= playerLevelUpData.GetLevelInfo(playerLevel).experienceToLevelUp)
         {
+            float oldHP = maxHealth;
+            int oldActions = actionsPerTurn;
+            int oldLevel = playerLevel;
+            
             currentExperience -= playerLevelUpData.GetLevelInfo(playerLevel).experienceToLevelUp;
             playerLevel++;
 
@@ -137,7 +147,10 @@ public class PlayerStats : MonoBehaviour
             Heal(healthToHeal);
 
             actionsPerTurn = newLevelInfo.actionsPerTurn;
+            actionDots.SetActionDotCount(actionsPerTurn);
             // playerController.ResetActions();
+
+            levelUpText.ShowLevelUpText(oldLevel, playerLevel, oldHP, maxHealth, oldActions, actionsPerTurn);
         }
     }
 

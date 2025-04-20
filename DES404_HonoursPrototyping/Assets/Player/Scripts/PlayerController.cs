@@ -17,6 +17,7 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private PlayerData playerData;
     [SerializeField] private PlayerLevelUpData playerLevelUpData;
     [SerializeField] private GameObject movementSpinner;
+    [SerializeField] private ActionDots actionDots;
     private PlayerStats playerStats;
     private GridManager gridManager;
     private Tilemap floorTilemap;
@@ -139,7 +140,8 @@ public class PlayerController : MonoBehaviour
         float elapsedTime = 0f;
 
         takingAction = true;
-        remainingActions--;
+        UseAction();
+
 
         while (elapsedTime < 1f / movementSpeed)
         {
@@ -209,13 +211,14 @@ public class PlayerController : MonoBehaviour
     public void ResetActions()
     {
         remainingActions = playerStats.actionsPerTurn;
+        actionDots.ResetActionDots();
     }
 
     private void AttackEnemy(GameObject enemy)
     {       
 
         takingAction = true;
-        remainingActions--;
+        UseAction();
 
         StartCoroutine(AttackAnimation(enemy));
     }  
@@ -295,5 +298,11 @@ public class PlayerController : MonoBehaviour
                 break;
             }
         }
+    }
+
+    public void UseAction()
+    {
+        remainingActions--;
+        actionDots.UseAction();
     }
 }
