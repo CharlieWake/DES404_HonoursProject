@@ -12,8 +12,8 @@ public class ExpGemScript : MonoBehaviour
     private Vector3 endPoint;
     private Vector3 controlPoint;
 
-    private float scatterTime = 0.2f;     // Time to scatter outward
-    private float zoomTime = 0.4f;        // Time to zoom toward the XP bar
+    private float scatterTime = 0.3f;     // Time to scatter outward
+    private float zoomTime = 0.5f;        // Time to zoom toward the XP bar
     private float scatterElapsed = 0f;
     private float zoomElapsed = 0f;
 
@@ -65,7 +65,7 @@ public class ExpGemScript : MonoBehaviour
         {
             zoomElapsed += Time.deltaTime;
             float linearT = Mathf.Clamp01(zoomElapsed / zoomTime);
-            float t = Mathf.Pow(linearT, 3f); // Ease-in for speed-up
+            float t = Mathf.SmoothStep(0f, 1f, linearT);
 
             Vector3 position = Mathf.Pow(1 - t, 2) * startPoint
                              + 2 * (1 - t) * t * controlPoint
