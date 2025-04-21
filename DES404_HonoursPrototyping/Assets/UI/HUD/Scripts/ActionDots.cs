@@ -11,8 +11,8 @@ public class ActionDots : MonoBehaviour
 
     private List<Image> actionDots = new List<Image>();
     
-    // Start is called before the first frame update
-    void Start()
+    
+    void Awake()
     {
         actionDotPrefab = Resources.Load<GameObject>("ActionDot/ActionDot");
         dotContainer = gameObject.GetComponent<Transform>();

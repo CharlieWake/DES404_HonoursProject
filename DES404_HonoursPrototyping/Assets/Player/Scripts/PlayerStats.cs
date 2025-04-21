@@ -10,7 +10,6 @@ public class PlayerStats : MonoBehaviour
     [Header("Components")]
     [SerializeField] private PlayerData playerData;
     [SerializeField] private PlayerLevelUpData playerLevelUpData;
-    
     private PlayerController playerController;
     SpriteRenderer spriteRenderer;
     GameObject floatingTextPrefab;
@@ -26,7 +25,6 @@ public class PlayerStats : MonoBehaviour
     [SerializeField] private Image healthBar;
     [SerializeField] private Image experienceBar;
     [SerializeField] private TextMeshProUGUI healthText;
-    [SerializeField] private ActionDots actionDots;
     [SerializeField] private LevelUpText levelUpText;
 
     private void Awake()
@@ -52,18 +50,22 @@ public class PlayerStats : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {               
+        
+    }
+
+    public void InitialiseStats()
+    {
         var levelInfo = playerLevelUpData.GetLevelInfo(playerLevel);
         if (levelInfo != null)
         {
             maxHealth = levelInfo.maxHealth;
             currentHealth = maxHealth;
-        }      
+            actionsPerTurn = levelInfo.actionsPerTurn;
+        }
+
         UpdateHealthText(currentHealth, maxHealth);
-        actionsPerTurn = playerLevelUpData.GetLevelInfo(playerLevel).actionsPerTurn;
-        actionDots.SetActionDotCount(actionsPerTurn);
+        Heal(0); // Ensure health bar is updated
 
-
-        playerController.ResetActions();
     }
 
     private void Update()
@@ -136,7 +138,7 @@ public class PlayerStats : MonoBehaviour
             float oldHP = maxHealth;
             int oldActions = actionsPerTurn;
             int oldLevel = playerLevel;
-            
+
             currentExperience -= playerLevelUpData.GetLevelInfo(playerLevel).experienceToLevelUp;
             playerLevel++;
 
@@ -147,7 +149,7 @@ public class PlayerStats : MonoBehaviour
             Heal(healthToHeal);
 
             actionsPerTurn = newLevelInfo.actionsPerTurn;
-            actionDots.SetActionDotCount(actionsPerTurn);
+            playerController.UpdateActionDots();
             // playerController.ResetActions();
 
             levelUpText.ShowLevelUpText(oldLevel, playerLevel, oldHP, maxHealth, oldActions, actionsPerTurn);

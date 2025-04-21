@@ -41,6 +41,10 @@ public class PlayerController : MonoBehaviour
     private void Start()
     {
         playerStats = GetComponent<PlayerStats>();
+        playerStats.InitialiseStats();
+        ResetActions();
+        UpdateActionDots();
+
         gridManager = GameManager.instance.gridManager;
         floorTilemap = GameManager.instance.floorTilemap;
         decorTilemap = GameManager.instance.decorTilemap;
@@ -305,4 +309,10 @@ public class PlayerController : MonoBehaviour
         remainingActions--;
         actionDots.UseAction();
     }
+
+    public void UpdateActionDots()
+    {
+        actionDots.SetActionDotCount(playerStats.actionsPerTurn);
+    }
+
 }
