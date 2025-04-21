@@ -10,7 +10,7 @@ public class Pathfinding : MonoBehaviour
     
         private void Start()
     {
-        gridManager = GameManager.instance.gridManager;        
+        gridManager = GameManager.instance.GridManager;        
     }
 
     public List<Vector3Int> FindPath(Vector3Int startPosition, Vector3Int targetPosition)

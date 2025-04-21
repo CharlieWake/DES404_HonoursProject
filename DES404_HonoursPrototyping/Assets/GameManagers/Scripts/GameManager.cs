@@ -5,66 +5,84 @@ using UnityEngine.Tilemaps;
 
 public class GameManager : MonoBehaviour
 {
-    public static GameManager instance;
+    public static GameManager instance { get; private set; }
 
     [Header("Game References")]
-    public GridManager gridManager;
-    public TurnManager turnManager;
-    public GameObject playerCharacter;
-    public PlayerController playerController;
-    public PlayerStats playerStats;
-    public GameObject pauseMenuPanel;
+    [SerializeField] private GridManager gridManager;
+    [SerializeField] private TurnManager turnManager;
+    [SerializeField] private GameObject playerCharacter;
+    [SerializeField] private PlayerController playerController;
+    [SerializeField] private PlayerStats playerStats;
+    [SerializeField] private GameObject pauseMenuPanel;
 
     [Header("Grid References")]
-    public Tilemap floorTilemap;
-    public Tilemap decorTilemap;
-    public GameObject highlighter;
+    [SerializeField] private Tilemap floorTilemap;
+    [SerializeField] private Tilemap decorTilemap;
+    [SerializeField] private GameObject highlighter;
 
     public bool isGamePaused = false;
 
     private void Awake()
     {
-        if (instance == null)
-        {
-            instance = this;
-        }
-        else
+        // Singleton Setup
+        if (instance != null && instance != this)
         {
             Destroy(gameObject);
+            return;
         }
+        instance = this;             
 
+        InitialiseReferences();
+    }
+
+    private void InitialiseReferences()
+    {
         if (playerCharacter == null)
         {
             playerCharacter = GameObject.FindWithTag("Player");
         }
 
-        if (playerController == null)
+        if (playerCharacter != null)
         {
-            playerController = playerCharacter.GetComponent<PlayerController>();
+            playerController ??= playerCharacter.GetComponent<PlayerController>();
+            playerStats ??= playerCharacter.GetComponent<PlayerStats>();
         }
 
-        if (playerStats == null)
-        {
-            playerStats = playerCharacter.GetComponent<PlayerStats>();
-        }
+        if (gridManager == null)
+            Debug.LogError("GameManager is missing a GridManager ref");
 
-        if (gridManager == null || turnManager == null)
-        {
-            Debug.LogError("GameManager is missing references.");
-        }
+        if (turnManager == null)
+            Debug.LogError("GameManager is missing a TurnManager ref");
+
+        if (playerCharacter == null || playerController == null || playerStats == null)
+            Debug.LogError("GameManager is missing Player refs");
     }
 
     public void PauseGame()
     {
-        // playerController.HideMovementSpinner();
-        pauseMenuPanel.SetActive(true);    
+        if (pauseMenuPanel != null)
+        {
+            pauseMenuPanel.SetActive(true);
+        }           
+
         isGamePaused = true;
     }
 
     public void UnpauseGame()
     {
-        pauseMenuPanel.SetActive(false);
-        // playerController.ShowMovementSpinner();
-        isGamePaused=false;
+        if (pauseMenuPanel != null)
+        {
+            pauseMenuPanel.SetActive(false);
+        }          
+
+        isGamePaused = false;
     }
+
+    public GridManager GridManager => gridManager;
+    public TurnManager TurnManager => turnManager;
+    public PlayerController PlayerController => playerController;
+    public PlayerStats PlayerStats => playerStats;
+    public GameObject Highlighter => highlighter;
+    public Tilemap FloorTilemap => floorTilemap;
+    public Tilemap DecorTilemap => decorTilemap;
 }

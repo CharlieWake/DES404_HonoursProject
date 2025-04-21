@@ -10,12 +10,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 0c621354f28aa354eb1e5ef5e8866dd0, type: 3}
-  m_Name: WarriorClass
+  m_Name: DefaultDamageData
   m_EditorClassIdentifier: 
-  playerClass: Warrior
-  maxHealth: 20
-  actionsPerTurn: 1
-  experienceToLevelUp: 15
-  playerLevel: 0
   minDamage: 1
-  maxDamage: 13
+  maxDamage: 7

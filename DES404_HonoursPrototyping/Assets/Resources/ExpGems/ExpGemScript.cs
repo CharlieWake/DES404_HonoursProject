@@ -75,7 +75,7 @@ public class ExpGemScript : MonoBehaviour
 
             if (linearT >= 1f)
             {
-                GameManager.instance.playerStats.AddExperience(1);
+                GameManager.instance.PlayerStats.AddExperience(1);
 
                 if (targetUI != null)
                 {

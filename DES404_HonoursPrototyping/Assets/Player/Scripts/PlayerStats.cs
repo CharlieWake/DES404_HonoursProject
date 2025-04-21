@@ -6,128 +6,107 @@ using TMPro;
 
 public class PlayerStats : MonoBehaviour
 {
-       
-    [Header("Components")]
-    [SerializeField] private PlayerData playerData;
+    [Header("Stat Data")]    
     [SerializeField] private PlayerLevelUpData playerLevelUpData;
-    private PlayerController playerController;
-    SpriteRenderer spriteRenderer;
-    GameObject floatingTextPrefab;
-    Transform playerCanvas;
 
-    private float currentHealth;
-    public float currentExperience = 0f;
-    private int playerLevel = 1;
-    private float maxHealth;
-    public int actionsPerTurn;
-
-    [Header("UI")]
+    [Header("UI Elements")]
     [SerializeField] private Image healthBar;
     [SerializeField] private Image experienceBar;
     [SerializeField] private TextMeshProUGUI healthText;
     [SerializeField] private LevelUpText levelUpText;
 
+    [Header("FloatingDamageText")]
+    [SerializeField] private GameObject floatingTextPrefab;
+
+    [Header("Settings")]
+    [SerializeField] private string playerCanvasName = "PlayerCanvas";
+    [SerializeField] private string healthBarObjectName = "HealthBar";
+
+    private PlayerController playerController;
+    private SpriteRenderer spriteRenderer;
+    private Transform playerCanvas;
+
+    // Player State
+    private float currentHealth;
+    private float maxHealth;
+    private float currentExperience = 0f;
+    private int playerLevel = 1;
+    private int actionsPerTurn;
+
+    // Read-Only Properties
+    public int Level => playerLevel;
+    public float Health => currentHealth;
+    public int ActionsPerTurn => actionsPerTurn;
+
     private void Awake()
-    {
-               
+    {               
         spriteRenderer = GetComponentInChildren<SpriteRenderer>();
-        playerCanvas = transform.Find("PlayerCanvas");
         playerController = GetComponent<PlayerController>();
+        playerCanvas = transform.Find(playerCanvasName);
 
         if (playerCanvas == null)
         {
             Debug.LogError("Could not find PlayerCanvas");
         }
 
-        floatingTextPrefab = Resources.Load<GameObject>("DamageText/FloatingDamageText");
-
         if (floatingTextPrefab == null)
         {
-            Debug.LogError("FloatingDamageTextPrefab could not be loaded from Resources!");
+            Debug.LogError("FloatingDamageTextPrefab not assigned in Inspector");
         }
     }
 
-    // Start is called before the first frame update
-    void Start()
-    {               
-        
+    private void Start()
+    {
+        InitialiseStats();
     }
 
     public void InitialiseStats()
     {
         var levelInfo = playerLevelUpData.GetLevelInfo(playerLevel);
-        if (levelInfo != null)
+        if (levelInfo == null)
         {
-            maxHealth = levelInfo.maxHealth;
-            currentHealth = maxHealth;
-            actionsPerTurn = levelInfo.actionsPerTurn;
+            Debug.LogError("Level info not found during stat set up!");
         }
 
-        UpdateHealthText(currentHealth, maxHealth);
-        Heal(0); // Ensure health bar is updated
+        maxHealth = levelInfo.maxHealth;
+        currentHealth = maxHealth;
+        actionsPerTurn = levelInfo.actionsPerTurn;
 
+        UpdateUI();
     }
 
     private void Update()
     {
-        float expToLevelUp = playerLevelUpData.GetLevelInfo(playerLevel)?.experienceToLevelUp ?? 1f;
-        healthBar.fillAmount = currentHealth / maxHealth;
-        experienceBar.fillAmount = currentExperience / expToLevelUp;
+        UpdateUI();
     }
 
     public void TakeDamage(float damageAmount)
     {
         currentHealth -= damageAmount;
-        StartCoroutine(DamageFlash(spriteRenderer));
-        FloatingDamageText(damageAmount.ToString(), transform.position);
-        UpdateHealthText(currentHealth, maxHealth);
+        currentHealth = Mathf.Max(currentHealth, 0);
 
-        GameObject targetObject = GameObject.Find("HealthBar");
-        if (targetObject != null)
-        {
-            UIShake shaker = targetObject.GetComponent<UIShake>();
-            if (shaker != null)
-            {
-                shaker.TriggerShake(0.2f); // You can tweak this time
-            }
-        }
+        StartCoroutine(DamageFlash());
+        ShowFloatingDamageText(damageAmount.ToString());
+
+        TriggerHealthBarShake();
+
+        UpdateUI();
 
         if (currentHealth <= 0)
         {
-            Death();
-        }        
+            HandleDeath();
+        }    
     }
 
-    private void Death()
+    public void Heal(float healAmount)
     {
-        // Destroy(gameObject);
-        Debug.Log("HP is zero, dead.");
+        currentHealth = Mathf.Min(currentHealth, Mathf.Max(0, healAmount), maxHealth);
+        UpdateUI();
     }
 
-    IEnumerator DamageFlash(SpriteRenderer spriteRenderer)
+    public void AddExperience(float expAmount)
     {
-        Color originalColor = spriteRenderer.color;
-
-        spriteRenderer.color = Color.red;
-        yield return new WaitForSeconds(0.1f);
-        spriteRenderer.color = originalColor;
-    }
-
-    void FloatingDamageText(string damageAmount, Vector3 worldPosition)
-    {
-        Vector3 screenPosition = Camera.main.WorldToScreenPoint(worldPosition + Vector3.up * 0.5f);
-        GameObject textObject = Instantiate(floatingTextPrefab, worldPosition, Quaternion.identity, playerCanvas);
-        textObject.GetComponent<FloatingDamageText>().setText(damageAmount);
-    }
-
-    void UpdateHealthText(float currentHealth, float maxHealth)
-    {
-        healthText.text = currentHealth + " / " + maxHealth;
-    }
-
-    public void AddExperience(float experienceValue)
-    {
-        currentExperience += experienceValue;
+        currentExperience += expAmount;
         CheckForLevelUp();
     }
 
@@ -135,31 +114,64 @@ public class PlayerStats : MonoBehaviour
     {
         while (playerLevel < playerLevelUpData.maxLevel && currentExperience >= playerLevelUpData.GetLevelInfo(playerLevel).experienceToLevelUp)
         {
-            float oldHP = maxHealth;
+            var currentLevelInfo = playerLevelUpData.GetLevelInfo(playerLevel);
+            currentExperience -= currentLevelInfo.experienceToLevelUp;                      
+            
+            float oldMaxHealth = maxHealth;
             int oldActions = actionsPerTurn;
             int oldLevel = playerLevel;
 
-            currentExperience -= playerLevelUpData.GetLevelInfo(playerLevel).experienceToLevelUp;
             playerLevel++;
-
             var newLevelInfo = playerLevelUpData.GetLevelInfo(playerLevel);
-            float healthToHeal = (newLevelInfo.maxHealth - maxHealth);
+
+            float healthGain = newLevelInfo.maxHealth = maxHealth;
             maxHealth = newLevelInfo.maxHealth;
-            UpdateHealthText(currentHealth, maxHealth);
-            Heal(healthToHeal);
+            Heal(healthGain);
 
             actionsPerTurn = newLevelInfo.actionsPerTurn;
-            playerController.UpdateActionDots();
-            // playerController.ResetActions();
 
-            levelUpText.ShowLevelUpText(oldLevel, playerLevel, oldHP, maxHealth, oldActions, actionsPerTurn);
+            playerController.UpdateActionDots();
+
+            levelUpText.ShowLevelUpText(oldLevel, playerLevel, oldMaxHealth, maxHealth, oldActions, actionsPerTurn);            
         }
     }
 
-    public void Heal(float healAmount)
+    private void HandleDeath()
     {
-        currentHealth += Mathf.Clamp(healAmount, 0, maxHealth);
-        UpdateHealthText(currentHealth, maxHealth);
+        Debug.Log("Player Has Died.");
     }
 
+    IEnumerator DamageFlash()
+    {
+        Color originalColour = spriteRenderer.color;
+        spriteRenderer.color = Color.red;
+        yield return new WaitForSeconds(0.1f);
+        spriteRenderer.color = originalColour;
+    }
+
+    void ShowFloatingDamageText(string damageAmount)
+    {
+        if (floatingTextPrefab == null || playerCanvas == null) return;
+
+        Vector3 position = transform.position + Vector3.up * 0.5f;
+        GameObject textObject = Instantiate(floatingTextPrefab, position, Quaternion.identity, playerCanvas);
+        textObject.GetComponent<FloatingDamageText>().setText(damageAmount);
+    }
+
+    private void TriggerHealthBarShake()
+    {
+        GameObject healthBarObject = GameObject.Find(healthBarObjectName);
+        if (healthBarObject != null && healthBarObject.TryGetComponent(out UIShake shakerScript))
+        {
+            shakerScript.TriggerShake(0.2f);
+        }
+    }       
+
+    private void UpdateUI()
+    {
+        float expToLevelUp = playerLevelUpData.GetLevelInfo(playerLevel)?.experienceToLevelUp ?? 1f;
+        healthBar.fillAmount = currentHealth / maxHealth;
+        experienceBar.fillAmount = currentExperience / expToLevelUp;
+        healthText.text = $"{Mathf.Ceil(currentHealth)} / {maxHealth}";
+    }
 }

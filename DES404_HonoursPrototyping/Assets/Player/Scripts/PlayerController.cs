@@ -1,4 +1,3 @@
-using JetBrains.Annotations;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -13,165 +12,261 @@ public struct CellInteractionInfo
 
 public class PlayerController : MonoBehaviour
 {
-    [Header("Components")]
-    [SerializeField] private PlayerData playerData;
+    [Header("Serialized Fields")]
+    [SerializeField] private DamageData damageData;
     [SerializeField] private PlayerLevelUpData playerLevelUpData;
     [SerializeField] private GameObject movementSpinner;
     [SerializeField] private ActionDots actionDots;
+    [SerializeField] private int remainingActions;
+    [SerializeField] private float movementSpeed = 1.5f;
+    [SerializeField] public float movementSpinnerSpeed = -50f;
+
+    [Header("Cached References")]
     private PlayerStats playerStats;
     private GridManager gridManager;
     private Tilemap floorTilemap;
     private Tilemap decorTilemap;
     private GameObject highlighter;
 
-    private float movementSpeed = 1.5f;
-    private int actionsPerTurn;
-    [SerializeField] private int remainingActions;
-       
+    [Header("Runtime State")]
+    public bool takingAction = false;
+    private bool hasResetSpinner = false;
     private Vector3Int gridPosition;
-        
-    public float movementSpinnerSpeed;
-
     private Vector3 spinnerStartPosition;
     private Quaternion spinnerStartRotation;
-    private bool hasResetSpinner = false;
-
-    public bool takingAction = false;
 
     private void Start()
     {
+        GetReferences();
+        InitialisePlayer();
+        SetupSpinnerPositions();                                 
+    }
+
+    private void GetReferences()
+    {
+        gridManager = GameManager.instance.GridManager;
+        floorTilemap = GameManager.instance.FloorTilemap;
+        decorTilemap = GameManager.instance.DecorTilemap;
+        highlighter = GameManager.instance.Highlighter;
         playerStats = GetComponent<PlayerStats>();
+    }
+
+    private void InitialisePlayer()
+    {
         playerStats.InitialiseStats();
         ResetActions();
         UpdateActionDots();
+    }
 
-        gridManager = GameManager.instance.gridManager;
-        floorTilemap = GameManager.instance.floorTilemap;
-        decorTilemap = GameManager.instance.decorTilemap;
-        highlighter = GameManager.instance.highlighter;
-
+    private void SetupSpinnerPositions()
+    {
         spinnerStartPosition = movementSpinner.transform.localPosition;
-        spinnerStartRotation = movementSpinner.transform.localRotation;        
-        Collider2D spinnerCollider = movementSpinner.GetComponent<CircleCollider2D>();
+        spinnerStartRotation = movementSpinner.transform.localRotation;
     }
 
     // Update is called once per frame
     void Update()
     {
-        if (TurnManager.instance.IsPlayerTurn() && !takingAction && !GameManager.instance.isGamePaused)
+        if (!IsPlayerTurnAndReady())
         {
-            movementSpinner.SetActive(true);
-            highlighter.SetActive(true);
-
-            if (hasResetSpinner == false)
-            {
-                movementSpinner.transform.localPosition = spinnerStartPosition;
-                movementSpinner.transform.localRotation = spinnerStartRotation;
-                hasResetSpinner = true;
-            }
-                        
-            RotateSpinner();
-
-        }
-        else
-        {
-            movementSpinner.SetActive(false);
-            highlighter.SetActive(false);
-            hasResetSpinner = false;
+            DeactivateSpinnerAndHighlighter();
+            return;
         }
 
-        // Inside Update the logic checks whether it is the player's turn AND if the player is not already moving
-        // If the player is moving or it's not their turn, the movementSpinner and Highlighter are hidden
-        // Also resets the movementSpinner's local position and rotation to where the player parent object is
+        ActivateSpinnerAndHighlighter();
+        ResetSpinner();
+        RotateSpinner();        
     }
     
+    private bool IsPlayerTurnAndReady()
+    {
+        return TurnManager.instance.IsPlayerTurn() && !takingAction && !GameManager.instance.isGamePaused;
+    }
+
+    private void ActivateSpinnerAndHighlighter()
+    {
+        movementSpinner.SetActive(true);
+        highlighter.SetActive(true);
+    }
+
+    private void DeactivateSpinnerAndHighlighter()
+    {
+        movementSpinner.SetActive(false);
+        highlighter.SetActive(false);
+        hasResetSpinner = false;
+    }
+
+    private void ResetSpinner()
+    {
+        if (hasResetSpinner) return;
+
+        movementSpinner.transform.localPosition = spinnerStartPosition;
+        movementSpinner.transform.localRotation = spinnerStartRotation;
+        hasResetSpinner = true;
+    }
+
     public void PlayerAction()
     {
-        if (remainingActions > 0)
-        {
-            CellInteractionInfo cellInfo = GetCellInfo(movementSpinner.transform.position);
+        if (!CanTakeAction()) return;
 
-            if (cellInfo.enemy != null)
-            {
-                AttackEnemy(cellInfo.enemy);
-            }
-            else if (cellInfo.interactable != null)
-            {
-                Debug.Log("I interact with the interactable object");
-            }
-            else if (cellInfo.isWalkable)
-            {
-                StartCoroutine(MoveToTargetPosition(gridPosition));
-            }                          
-        }    
+        CellInteractionInfo cellInfo = GetCellInfo(movementSpinner.transform.position);
+
+        if (cellInfo.enemy != null)
+        {
+            HandleEnemyInteraction(cellInfo.enemy);
+        }
+        else if (cellInfo.interactable != null)
+        {
+            HandleInteractable(cellInfo.interactable);
+        }
+        else if (cellInfo.isWalkable)
+        {
+            StartCoroutine(MoveToTargetPosition(gridPosition));
+        }          
     }
-    private CellInteractionInfo GetCellInfo(Vector2 spinnerPosition)
+
+    private bool CanTakeAction()
     {
-        gridPosition = floorTilemap.WorldToCell(spinnerPosition);
+        return remainingActions > 0;
+    }
 
-        bool isWalkable = floorTilemap.HasTile(gridPosition) &&
-                          !decorTilemap.HasTile(gridPosition) &&
-                          gridManager.getAdjacentTiles(floorTilemap.WorldToCell(transform.position)).Contains(gridPosition);
+    private void HandleEnemyInteraction(GameObject enemy)
+    {
+        AttackEnemy(enemy);
+    }
 
-        GameObject enemy = null;
-        GameObject interactable = null;
-
-        Collider2D enemyCollider = Physics2D.OverlapPoint(floorTilemap.GetCellCenterWorld(gridPosition), LayerMask.GetMask("Enemy"));
-
-        if (enemyCollider != null)
-        {
-            enemy = enemyCollider.gameObject;
-        }
-
-        Collider2D interactableCollider = Physics2D.OverlapPoint(floorTilemap.GetCellCenterWorld(gridPosition), LayerMask.GetMask("Interactable"));
-        if (interactableCollider != null)
-        {
-            interactable = interactableCollider.gameObject;
-        }
-
-        return new CellInteractionInfo
-        {
-            isWalkable = isWalkable,
-            enemy = enemy,
-            interactable = interactable,
-        };
+    private void HandleInteractable(GameObject interactable)
+    {
+        //Interact with Interactable Here
     }
 
     IEnumerator MoveToTargetPosition(Vector3Int targetPosition)
     {
-        Vector3 targetGridCentre = floorTilemap.GetCellCenterWorld(targetPosition);
-        Vector3 startPosition = transform.position;
-        float elapsedTime = 0f;
+        StartPlayerMovement();
 
-        takingAction = true;
-        UseAction();
-
-
-        while (elapsedTime < 1f / movementSpeed)
-        {
-            transform.position = Vector3.Lerp(startPosition, targetGridCentre, elapsedTime * movementSpeed);
-            elapsedTime += Time.deltaTime;
-            yield return null;
-        }
-
-        transform.position = targetGridCentre;
+        yield return MoveToPositionRoutine(floorTilemap.GetCellCenterWorld(targetPosition));
 
         yield return new WaitForSeconds(0.5f);
 
+        FinishPlayerMovement();
+    }
+
+    private void StartPlayerMovement()
+    {
+        takingAction = true;
+        UseAction();
+    }
+
+    private void FinishPlayerMovement()
+    {
         if (remainingActions > 0)
         {
             takingAction = false;
         }
         else
         {
-            Invoke("EndPlayerTurn", 1f);
-        }        
+            Invoke(nameof(EndPlayerTurn), 1f);
+        }
+    }
 
-        // This is a coroutine which is a function that can pause and resume at runtime
-        // This coroutine finds the target grid position and smoothly lerps the player sprite towards it
-        // The speed the player moves towards the target position is based on the movementSpeed variable
-        // The elapsedTime variable keeps track of how long the player has taken to move
-        // After the player has moved to the new position, there is a pause of 1 second then the StartEnemyTurn function is called
+    private IEnumerator MoveToPositionRoutine(Vector3 targetPosition)
+    {
+        Vector3 startPosition = transform.position;
+        float elapsedTime = 0f;
+        float duration = 1f / movementSpeed;
+
+        while (elapsedTime < duration)
+        {
+            transform.position = Vector3.Lerp(startPosition, targetPosition, elapsedTime / duration);
+            elapsedTime += Time.deltaTime;
+            yield return null;
+        }
+
+        transform.position = targetPosition;
+    }
+
+    private void AttackEnemy(GameObject enemy)
+    {
+        StartPlayerAttack();
+        StartCoroutine(AttackRoutine(enemy));
+    }
+
+    private IEnumerator AttackRoutine(GameObject enemy)
+    {
+        Vector3 originalPosition = transform.position;
+        Vector3 attackPosition = GetAttackLungePosition(enemy.transform.position);
+
+        yield return LerpPosition(originalPosition, attackPosition, 0.1f);
+
+        DealDamageToEnemy(enemy);
+
+        yield return new WaitForSeconds(0.05f);
+
+        yield return LerpPosition(attackPosition, originalPosition, 0.1f);
+
+        FinishPlayerAttack();
+    }
+
+    private Vector3 GetAttackLungePosition(Vector3 enemyPosition)
+    {
+        return Vector3.Lerp(transform.position, enemyPosition, 0.2f);
+    }
+
+    private void DealDamageToEnemy(GameObject enemy)
+    {
+        float damage = damageData.GetRandomDamage();
+        enemy.GetComponent<EnemyStats>().TakeDamage(damage);
+    }
+
+    private void StartPlayerAttack()
+    {
+        takingAction = true;
+        UseAction();
+    }
+
+    private void FinishPlayerAttack()
+    {
+        if (remainingActions > 0)
+        {
+            takingAction = false;
+        }
+        else
+        {
+            Invoke(nameof(EndPlayerTurn), 2f);
+        }
+    }
+
+    private IEnumerator LerpPosition(Vector3 from, Vector3 to, float duration)
+    {
+        float elapsed = 0f;
+        while (elapsed < duration)
+        {
+            float t = elapsed / duration;
+            transform.position = Vector3.Lerp(from, to, t);
+            elapsed += Time.deltaTime;
+            yield return null;
+        }
+        transform.position = to;
+    }
+
+    private void HighlightCheck(Vector3 spinnerWorldPosition)
+    {
+        CellInteractionInfo cellInfo = GetCellInfo(spinnerWorldPosition);
+
+        if (cellInfo.enemy != null || cellInfo.interactable != null || cellInfo.isWalkable)
+        {
+            HighlightCellAt(gridPosition);            
+        }
+        else
+        {        
+            highlighter.SetActive(false);        
+        }
+    }
+
+    private void HighlightCellAt(Vector3Int cellPosition)
+    {
+        highlighter.transform.position = floorTilemap.GetCellCenterWorld(cellPosition);
+        highlighter.SetActive(true);
     }
 
     private void RotateSpinner()
@@ -180,101 +275,16 @@ public class PlayerController : MonoBehaviour
         HighlightCheck(movementSpinner.transform.position);
     }
 
-    private void HighlightCheck(Vector2 spinnerPosition)
-    {
-        CellInteractionInfo cellInfo = GetCellInfo(movementSpinner.transform.position);
-
-        if (cellInfo.enemy != null)
-        {
-            highlighter.transform.position = floorTilemap.GetCellCenterWorld(gridPosition);
-            highlighter.SetActive(true);
-        }
-        else if (cellInfo.interactable != null)
-        {
-            highlighter.transform.position = floorTilemap.GetCellCenterWorld(gridPosition);
-            highlighter.SetActive(true);
-        }
-        else if (cellInfo.isWalkable)
-        {
-            highlighter.transform.position = floorTilemap.GetCellCenterWorld(gridPosition);
-            highlighter.SetActive(true);
-        }
-        else
-        {
-            highlighter.SetActive(false);
-        }
-    }     
-
     private void EndPlayerTurn()
     {
         TurnManager.instance.StartEnemyTurn();
-
-        // Invoked at the end of the 'MoveToTargetPosition' coroutine.
     }
 
     public void ResetActions()
     {
-        remainingActions = playerStats.actionsPerTurn;
+        remainingActions = playerStats.ActionsPerTurn;
         actionDots.ResetActionDots();
-    }
-
-    private void AttackEnemy(GameObject enemy)
-    {       
-
-        takingAction = true;
-        UseAction();
-
-        StartCoroutine(AttackAnimation(enemy));
-    }  
-    
-    IEnumerator AttackAnimation(GameObject enemy)
-    {
-        Vector3 originalPosition = transform.position;
-        Vector3 targetPosition = enemy.transform.position;
-
-        Vector3 attackPosition = Vector3.Lerp(originalPosition, targetPosition, 0.2f);
-
-        float animSpeed = 10f;
-        float elapsedTime = 0f;
-
-        // Lunge Forward
-        while (elapsedTime < 0.1f)
-        {
-            transform.position = Vector3.Lerp(originalPosition, attackPosition, elapsedTime * animSpeed);
-            elapsedTime += Time.deltaTime;
-            yield return null;
-        }
-
-        transform.position = attackPosition;
-
-        // Deal Damage
-        float damageAmount = playerData.GetRandomDamage();
-        enemy.GetComponent<EnemyStats>().TakeDamage(damageAmount);
-        // Debug.Log("I did " + damageAmount + " damage to " + enemy.name);
-
-        yield return new WaitForSeconds(0.05f);
-
-        // Move Back
-        elapsedTime = 0f;
-        while (elapsedTime < 0.1f)
-        {
-            transform.position = Vector3.Lerp(attackPosition, originalPosition, elapsedTime * animSpeed);
-            elapsedTime += Time.deltaTime;
-            yield return null;
-        }
-
-        transform.position = originalPosition;
-                
-        // Turn End Logic
-        if (remainingActions > 0)
-        {
-            takingAction = false;
-        }
-        else
-        {
-            Invoke("EndPlayerTurn", 2f);
-        }
-    }
+    }          
 
     public void HideMovementSpinner()
     {
@@ -312,7 +322,46 @@ public class PlayerController : MonoBehaviour
 
     public void UpdateActionDots()
     {
-        actionDots.SetActionDotCount(playerStats.actionsPerTurn);
+        actionDots.SetActionDotCount(playerStats.ActionsPerTurn);
     }
 
+    // ---CellInfo---
+
+    private CellInteractionInfo GetCellInfo(Vector2 spinnerPosition)
+    {
+        gridPosition = floorTilemap.WorldToCell(spinnerPosition);
+        Vector3Int playerPosition = floorTilemap.WorldToCell(transform.position);
+
+        List<Vector3Int> adjacentTiles = gridManager.getAdjacentTiles(playerPosition);
+        bool isAdjacent = adjacentTiles.Contains(gridPosition);
+
+        bool isWalkable = floorTilemap.HasTile(gridPosition) &&
+                          !decorTilemap.HasTile(gridPosition) &&
+                          isAdjacent;
+
+        GameObject enemy = null;
+        GameObject interactable = null;
+
+        if (isAdjacent)
+        {
+            Collider2D enemyCollider = Physics2D.OverlapPoint(floorTilemap.GetCellCenterWorld(gridPosition), LayerMask.GetMask("Enemy"));
+            if (enemyCollider != null)
+            {
+                enemy = enemyCollider.gameObject;
+            }
+
+            Collider2D interactableCollider = Physics2D.OverlapPoint(floorTilemap.GetCellCenterWorld(gridPosition), LayerMask.GetMask("Interactable"));
+            if (interactableCollider != null)
+            {
+                interactable = interactableCollider.gameObject;
+            }
+        }
+
+        return new CellInteractionInfo
+        {
+            isWalkable = isWalkable,
+            enemy = enemy,
+            interactable = interactable,
+        };                     
+    }
 }

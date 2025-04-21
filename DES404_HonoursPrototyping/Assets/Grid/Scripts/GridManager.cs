@@ -19,7 +19,7 @@ public class GridManager : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        floorTilemap = GameManager.instance.floorTilemap;
+        floorTilemap = GameManager.instance.FloorTilemap;
         InitializeGrid();
     }
 

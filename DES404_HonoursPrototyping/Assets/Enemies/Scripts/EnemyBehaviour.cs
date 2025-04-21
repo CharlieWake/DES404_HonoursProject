@@ -25,15 +25,15 @@ public class EnemyBehaviour : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        gridManager = GameManager.instance.gridManager;
-        turnManager = GameManager.instance.turnManager;
-        playerCharacter = GameManager.instance.playerCharacter.transform;
-        floorTilemap = GameManager.instance.floorTilemap;
+        gridManager = GameManager.instance.GridManager;
+        turnManager = GameManager.instance.TurnManager;
+        playerCharacter = GameManager.instance.PlayerController.transform;
+        floorTilemap = GameManager.instance.FloorTilemap;
 
         enemyStats = GetComponent<EnemyStats>();
         pathfinding = GetComponent<Pathfinding>();
 
-        TurnManager.instance.FindAllEnemies(this);
+        TurnManager.instance.RegisterEnemy(this);
         enemyPosition = floorTilemap.WorldToCell(transform.position);
         gridManager.SetTileAsOccupied(enemyPosition, true);
     }
@@ -122,7 +122,7 @@ public class EnemyBehaviour : MonoBehaviour
     public void RemoveEnemy()
     {
         gridManager.SetTileAsOccupied(enemyPosition, false);
-        TurnManager.instance.RemoveEnemy(this);
+        TurnManager.instance.UnregisterEnemy(this);
     }
 
     IEnumerator AttackAnimation()

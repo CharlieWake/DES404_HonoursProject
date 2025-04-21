@@ -21,7 +21,7 @@ public class TouchManager : MonoBehaviour
 
     private void Start()
     {
-        turnManager = GameManager.instance.turnManager;
+        turnManager = GameManager.instance.TurnManager;
     }
 
     private void OnEnable()
