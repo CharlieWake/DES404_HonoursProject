@@ -12,6 +12,7 @@ public class TurnManager : MonoBehaviour
 
     private GameObject playerCharacter;
     private PlayerController playerController;
+    private CinemachineBrain brain;
 
     private readonly List<EnemyBehaviour> enemies = new List<EnemyBehaviour>();
     public bool isPlayerTurn = true;
@@ -35,6 +36,7 @@ public class TurnManager : MonoBehaviour
     {
         playerCharacter = GameManager.instance.PlayerController.gameObject;
         playerController = GameManager.instance.PlayerController;
+        brain = Camera.main.GetComponent<CinemachineBrain>();
 
         if (virtualCamera != null && playerCharacter != null)
         {
@@ -59,7 +61,6 @@ public class TurnManager : MonoBehaviour
 
     public void StartEnemyTurn()
     {
-        SortEnemiesByDistanceToPlayer();
         StartCoroutine(EnemyTurnSequence());
     }
 
@@ -69,12 +70,35 @@ public class TurnManager : MonoBehaviour
 
         yield return TriggerStartOfEnemyTurn();
 
-        foreach (EnemyBehaviour enemy in enemies)
+        CheckEnemySight();
+
+        List<EnemyBehaviour> activeEnemies = enemies.FindAll(e => e != null && e.InCombat);
+
+        if (activeEnemies.Count == 0)
+        {
+            StartPlayerTurn();
+            yield break;
+        }
+
+        SortEnemiesByDistanceToPlayer();
+
+        foreach (EnemyBehaviour enemy in activeEnemies)
         {
             if (enemy == null) continue;
+            
+            virtualCamera.Follow = enemy.transform;            
 
-            virtualCamera.Follow = enemy.transform;
-            yield return enemy.TakeTurn();
+            if (!enemy.HasSeenPlayer)
+            {
+                yield return WaitForCameraBlend();
+                yield return enemy.HandleAlertAndEnterCombat();
+            }
+            else
+            {
+                yield return enemy.TakeTurn();
+            }
+            
+            yield return null;
         }
 
         yield return TriggerEndOfEnemyTurn();
@@ -106,8 +130,29 @@ public class TurnManager : MonoBehaviour
         return Mathf.RoundToInt(Mathf.Abs(a.x - b.x) + Mathf.Abs(a.y - b.y));
     }
 
+    private IEnumerator WaitForCameraBlend(float bufferTime = 1.25f)
+    {
+        if (brain == null) yield break;
+
+        while (brain.IsBlending)
+        {
+            yield return null;
+        }
+
+        yield return new WaitForSeconds(bufferTime);
+    }
+
 
     // ---Enemy Turn Phases---
+
+    private void CheckEnemySight()
+    {
+        foreach (EnemyBehaviour enemy in enemies)
+        {
+            if (enemy == null) continue;
+            enemy.CheckForPlayer();
+        }
+    }
 
     private IEnumerator TriggerStartOfEnemyTurn()
     {

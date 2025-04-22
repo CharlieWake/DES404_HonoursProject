@@ -9,5 +9,13 @@ public class EnemyData : ScriptableObject
     public float maxHealth;
     public int actionsPerTurn;
     public int experienceToGive;
-    public float damageAmount;
+
+    [Header("Damage Range")]
+    public int minDamage;
+    public int maxDamage;
+
+    public float GetRandomDamage()
+    {
+        return Random.Range(minDamage, maxDamage);
+    }
 }

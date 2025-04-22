@@ -11,7 +11,6 @@ GameObject:
   - component: {fileID: 964163406872264347}
   - component: {fileID: 8352582874895123938}
   - component: {fileID: 8384323062002602673}
-  - component: {fileID: 2741828362048693730}
   - component: {fileID: 5651548929531561889}
   m_Layer: 6
   m_Name: Enemy_GenericBase
@@ -64,19 +63,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 83220d0ebec6b114398c092646bbb740, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!114 &2741828362048693730
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 409179369100451264}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4e21891e21671fc4aa5a8ba907864564, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  enemyData: {fileID: 0}
 --- !u!61 &5651548929531561889
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -587,7 +573,7 @@ SpriteRenderer:
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: -135196781
-  m_SortingLayer: 1
+  m_SortingLayer: 4
   m_SortingOrder: 0
   m_Sprite: {fileID: -5177388603050735206, guid: cc35afd292fc349128b36a291fb3a165, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}

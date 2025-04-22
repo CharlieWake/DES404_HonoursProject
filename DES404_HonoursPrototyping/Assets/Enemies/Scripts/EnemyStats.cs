@@ -14,15 +14,11 @@ public class EnemyStats : MonoBehaviour
 
     [Header("Stats")]
     [SerializeField] private float currentHealth;
-    [SerializeField] private int actionsPerTurn;
-
-    
-    
-
+    [SerializeField] private int actionsPerTurn;    
 
     private void Awake()
     {
-        healthBar = GetComponentInChildren<FloatingHealthBar>();
+        healthBar = GetComponentInChildren<FloatingHealthBar>(true);
         spriteRenderer = GetComponentInChildren<SpriteRenderer>();
         enemyCanvas = transform.Find("EnemyCanvas");
 
@@ -92,9 +88,7 @@ public class EnemyStats : MonoBehaviour
     }
 
     IEnumerator DeathEvent()
-    {
-        
-        
+    {               
         yield return StartCoroutine(FadeOutEnemy(1f));
 
         Vector3 spawnPosition = Camera.main.WorldToScreenPoint(transform.position);
@@ -106,7 +100,7 @@ public class EnemyStats : MonoBehaviour
             yield return new WaitForSeconds(Random.Range(0.05f, 0.15f));
         }
 
-        GetComponent<EnemyBehaviour>().RemoveEnemy();
+        GetComponent<EnemyBehaviour>().UnregisterEnemy();
         Destroy(gameObject);
     }
 
@@ -130,5 +124,10 @@ public class EnemyStats : MonoBehaviour
         Color finalColor = originalColor;
         finalColor.a = 0f;
         spriteRenderer.color = finalColor;
+    }
+
+    public float GetDamageAmount()
+    {
+        return enemyData.GetRandomDamage();
     }
 }

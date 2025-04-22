@@ -16,4 +16,5 @@ MonoBehaviour:
   maxHealth: 12
   actionsPerTurn: 1
   experienceToGive: 3
-  damageAmount: 3
+  minDamage: 1
+  maxDamage: 5

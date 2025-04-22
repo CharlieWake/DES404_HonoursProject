@@ -5,7 +5,7 @@ using UnityEngine.Tilemaps;
 
 public class GridManager : MonoBehaviour
 {
-
+    public Grid grid;
     private Tilemap floorTilemap;
     public Dictionary<Vector3Int, bool> walkableTiles = new Dictionary<Vector3Int, bool>();
     // Creates a new dictionary with two values to store a list of walkable tiles
@@ -15,6 +15,8 @@ public class GridManager : MonoBehaviour
     public Dictionary<Vector3Int, bool> occupiedTiles = new Dictionary<Vector3Int, bool>();
     // Creates another dictionary with two values to store a list of tiles that are occupied by enemies
     // This dictionary takes in the tile position on the tilemap (Vector3Int) and whether it is occupied or not (bool)
+
+
 
     // Start is called before the first frame update
     void Start()

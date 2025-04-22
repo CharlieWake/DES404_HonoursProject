@@ -3,165 +3,185 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Tilemaps;
 
-public class EnemyBehaviour : MonoBehaviour
+[RequireComponent(typeof(EnemyStats))]
+public abstract class EnemyBehaviour : MonoBehaviour
 {
-    private GridManager gridManager;
-    private Pathfinding pathfinding;
-    private TurnManager turnManager;
-    private Transform playerCharacter;
-    private Tilemap floorTilemap;
+    [Header("References")]
+    protected GridManager gridManager;
+    protected Pathfinding pathfinding;
+    protected GameManager gameManager;
+    protected PlayerController playerController;
+    protected PlayerStats playerStats;
 
-    [SerializeField] private EnemyData enemyData;
-    private EnemyStats enemyStats;
+    protected Vector3Int currentGridPosition;
+    [SerializeField] protected GameObject alertIcon;
+    [SerializeField] protected GameObject healthBar;
+    protected bool inCombat = false;
+    protected bool hasSeenPlayer = false;
 
-    
-    private float gridMovementSpeed = 1.5f;
-    private float pauseBetweenActions = 1f;
+    protected EnemyStats enemyStats;
 
+    [SerializeField] protected int sightRange = 5;
 
-    private Vector3Int enemyPosition;
-    private List<Vector3Int> path = new List<Vector3Int>();
-
-    // Start is called before the first frame update
-    void Start()
+    protected virtual void Awake()
     {
-        gridManager = GameManager.instance.GridManager;
-        turnManager = GameManager.instance.TurnManager;
-        playerCharacter = GameManager.instance.PlayerController.transform;
-        floorTilemap = GameManager.instance.FloorTilemap;
-
         enemyStats = GetComponent<EnemyStats>();
+    }
+
+    public virtual void Initialise()
+    {
+        gameManager = GameManager.instance;
+        gridManager = gameManager.GridManager;
+        playerController = gameManager.PlayerController;
+        playerStats = gameManager.PlayerStats;
         pathfinding = GetComponent<Pathfinding>();
 
-        TurnManager.instance.RegisterEnemy(this);
-        enemyPosition = floorTilemap.WorldToCell(transform.position);
-        gridManager.SetTileAsOccupied(enemyPosition, true);
+        currentGridPosition = gridManager.grid.WorldToCell(transform.position);
+        gridManager.SetTileAsOccupied(currentGridPosition, true);
     }
 
-    public IEnumerator TakeTurn()
+    protected virtual void Start()
     {
-        int actionsRemaining = enemyData.actionsPerTurn;
-        path = null;
+        Initialise();
+        RegisterEnemy();
+    }
 
-        while (actionsRemaining > 0)
+    public virtual IEnumerator TakeTurn()
+    {             
+        yield break;
+    }
+
+    public virtual void CheckForPlayer()
+    {
+        Vector3Int enemyPosition = currentGridPosition;
+        Vector3Int playerPosition = gridManager.grid.WorldToCell(playerController.transform.position);
+
+        int distance = Mathf.Abs(enemyPosition.x - playerPosition.x) + Mathf.Abs(enemyPosition.y - playerPosition.y);
+
+        if (distance <= sightRange && HasLineOfSightToPlayer(enemyPosition, playerPosition))
         {
-            // Check if the enemy is adjacent to the player and can attack
-            if (gridManager.getAdjacentTiles(enemyPosition).Contains(floorTilemap.WorldToCell(playerCharacter.position)))
-            {
-                AttackPlayer();
-                actionsRemaining--;
-                yield return new WaitForSeconds(0.5f);
-            }
-            else
-            {
-                // If no path, recalculate path to player
-                if (path == null || path.Count == 0)
-                {
-                    Vector3Int playerPosition = floorTilemap.WorldToCell(playerCharacter.position);
-                    path = pathfinding.FindPath(enemyPosition, playerPosition);
-                }
+            Debug.Log("I see the player, now entering combat.");
+            inCombat = true;
+        }
+    }
 
-                // If there's a path to follow, check the first tile in the path
-                if (path.Count > 0)
-                {
-                    // If the next tile is not blocked, move towards it
-                    if (!gridManager.IsTileOccupied(path[0]) || path[0] == floorTilemap.WorldToCell(playerCharacter.position))
-                    {
-                        gridManager.SetTileAsOccupied(enemyPosition, false);
-                        yield return StartCoroutine(MoveToNextTile(path[0]));
-                        enemyPosition = path[0];
-                        gridManager.SetTileAsOccupied(enemyPosition, true);
-                        path.RemoveAt(0);
-                    }
-                    else
-                    {
-                        // If the next tile is occupied, print "waiting" and stop movement
-                        Debug.Log("Next tile is occupied, waiting");
-                        break; // This makes the enemy skip any further movement for this turn
-                    }
-                }
-                else
-                {
-                    Debug.Log("No valid path, waiting");
-                    break; // No valid path found, enemy waits
-                }
-            }
+    public IEnumerator HandleAlertAndEnterCombat()
+    {
+        hasSeenPlayer = true;
 
-            actionsRemaining--;
-            yield return new WaitForSeconds(pauseBetweenActions);
+        if (alertIcon != null)
+        {
+            alertIcon.SetActive(true);
         }
 
-        // At the start of its turn, an enemy uses the getAdjacentTiles method from the GridManager script
-        // If its next to the player, it will use its action to attack
-        // If not, it will calculate a new path to the player using the FindPath method in the Pathfinding script
+        yield return new WaitForSeconds(0.75f);
+
+        if (alertIcon != null)
+        {
+            alertIcon.SetActive(false);            
+        }
+
+        yield return new WaitForSeconds(0.25f);
+
+        if (healthBar != null)
+        {
+            healthBar.SetActive(true);
+        }
+
+        yield return TakeTurn();
+    }
+    
+    protected bool IsPlayerAdjacent()
+    {
+        Vector3Int playerPos = gridManager.grid.WorldToCell(playerController.transform.position);
+        return Vector3Int.Distance(currentGridPosition, playerPos) == 1;
     }
 
-    IEnumerator MoveToNextTile(Vector3Int nextTile)
+    protected IEnumerator MoveToNextTile(Vector3Int targetGridPosition)
     {
-        Vector3 targetPosition = floorTilemap.CellToWorld(nextTile) + floorTilemap.cellSize / 2;
-        Vector3 startPosition = transform.position;
-        float elapsedTime = 0f;
+        Vector3 start = transform.position;
+        Vector3 end = gridManager.grid.GetCellCenterWorld(targetGridPosition);
+        float elapsed = 0f;
+        float duration = 0.66f;
 
-        while (elapsedTime < 1f / gridMovementSpeed)
+        while (elapsed < duration)
         {
-            transform.position = Vector3.Lerp(startPosition, targetPosition, elapsedTime * gridMovementSpeed);
-            elapsedTime += Time.deltaTime;
+            transform.position = Vector3.Lerp(start, end, elapsed / duration);
+            elapsed += Time.deltaTime;
             yield return null;
         }
 
-        transform.position = targetPosition;
-
-        // This function works similar to the PlayerController function to lerp the enemy sprite smoothly to the targetPosition
+        transform.position = end;
+        currentGridPosition = targetGridPosition;
     }
 
-    void AttackPlayer()
+    protected IEnumerator MeleeAttack()
     {
-        StartCoroutine(AttackAnimation());
+        Vector3 start = transform.position;
+        Vector3 target = playerController.transform.position;
+        Vector3 lungePosition = Vector3.Lerp(start, target, 0.2f);
+
+        float elapsed = 0f;
+        float duration = 0.1f;
+
+        while (elapsed < duration)
+        {
+            transform.position = Vector3.Lerp(start, lungePosition, elapsed / duration);
+            elapsed += Time.deltaTime;
+            yield return null;
+        }
+
+        DealDamage();
+        transform.position = lungePosition;
+        elapsed = 0f;
+
+        while (elapsed < duration)
+        {
+            transform.position = Vector3.Lerp(lungePosition, start, elapsed / duration);
+            elapsed += Time.deltaTime;
+            yield return null;
+        }
+
+        transform.position = start;
     }
 
-    public void RemoveEnemy()
+        protected void DealDamage()
     {
-        gridManager.SetTileAsOccupied(enemyPosition, false);
+        playerStats.TakeDamage(enemyStats.GetDamageAmount());
+    }
+
+    protected void RegisterEnemy()
+    {
+        TurnManager.instance.RegisterEnemy(this);
+    }
+
+    public void UnregisterEnemy()
+    {
         TurnManager.instance.UnregisterEnemy(this);
     }
 
-    IEnumerator AttackAnimation()
+    protected bool HasLineOfSightToPlayer(Vector3Int from, Vector3Int to)
     {
-        Vector3 originalPosition = transform.position;
-        Vector3 targetPosition = playerCharacter.transform.position;
+        Vector3Int direction = to - from;
+        int steps = Mathf.Max(Mathf.Abs(direction.x), Mathf.Abs(direction.y));
+        Vector2 step = new Vector2(direction.x, direction.y) / steps;
 
-        Vector3 attackPosition = Vector3.Lerp(originalPosition, targetPosition, 0.2f);
-
-        float animSpeed = 10f;
-        float elapsedTime = 0f;
-
-        // Lunge Forward
-        while (elapsedTime < 0.1f)
+        Vector3 current = (Vector3)from + new Vector3(0.5f, 0.5f, 0); // center of tile
+        for (int i = 0; i <= steps; i++)
         {
-            transform.position = Vector3.Lerp(originalPosition, attackPosition, elapsedTime * animSpeed);
-            elapsedTime += Time.deltaTime;
-            yield return null;
+            Vector3Int tilePos = gridManager.grid.WorldToCell(current);
+            if (!gridManager.IsTileWalkable(tilePos))
+                return false; // blocked
+
+            if (tilePos == to)
+                return true;
+
+            current += (Vector3)step;
         }
 
-        transform.position = attackPosition;
-
-        // Debug.Log("Next to Player, I now Attack!");
-        float damageAmount = Random.Range(1, 4);
-        playerCharacter.GetComponent<PlayerStats>().TakeDamage(damageAmount);
-        // Debug.Log("I dealt " + damageAmount + " to the player");
-
-        yield return new WaitForSeconds(0.05f);
-
-        // Move Back
-        elapsedTime = 0f;
-        while (elapsedTime < 0.1f)
-        {
-            transform.position = Vector3.Lerp(attackPosition, originalPosition, elapsedTime * animSpeed);
-            elapsedTime += Time.deltaTime;
-            yield return null;
-        }
-
-        transform.position = originalPosition;
+        return false;
     }
 
+    public bool InCombat => inCombat;
+    public bool HasSeenPlayer => hasSeenPlayer;
 }
