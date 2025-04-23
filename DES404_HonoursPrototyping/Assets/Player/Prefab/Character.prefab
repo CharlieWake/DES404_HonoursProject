@@ -100,6 +100,8 @@ GameObject:
   - component: {fileID: 210163163764092387}
   - component: {fileID: 714674007498013707}
   - component: {fileID: 5565361203086327671}
+  - component: {fileID: 7973046312720964029}
+  - component: {fileID: 2976946941211478906}
   m_Layer: 0
   m_Name: Character
   m_TagString: Player
@@ -168,6 +170,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1b9807bb272198f45afbfa32601d5307, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  pauseCharging: {fileID: 0}
 --- !u!114 &210163163764092387
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -180,11 +183,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d9478215e87951f4ca7c82887fe769d8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  playerData: {fileID: 11400000, guid: 15a42c2ef4e34cf439f76c261b0791e8, type: 2}
-  currentExperience: 0
+  playerLevelUpData: {fileID: 11400000, guid: 6f4867eabe95f4c4999f3be178e6c3b6, type: 2}
   healthBar: {fileID: 0}
   experienceBar: {fileID: 0}
   healthText: {fileID: 0}
+  levelUpText: {fileID: 0}
+  floatingTextPrefab: {fileID: 7987917236184173770, guid: ec9790c6f684cbe4786a840551fd2ce9, type: 3}
+  playerCanvasName: PlayerCanvas
+  healthBarObjectName: HealthBar
 --- !u!114 &714674007498013707
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -197,9 +203,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7a61a1a84bcd9a6418072430e2409ba0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  playerData: {fileID: 11400000, guid: 15a42c2ef4e34cf439f76c261b0791e8, type: 2}
+  damageData: {fileID: 11400000, guid: 15a42c2ef4e34cf439f76c261b0791e8, type: 2}
+  playerLevelUpData: {fileID: 11400000, guid: 6f4867eabe95f4c4999f3be178e6c3b6, type: 2}
   movementSpinner: {fileID: 1720806109714009452}
-  movementSpinnerSpeed: -60
+  actionDots: {fileID: 0}
+  remainingActions: 0
+  movementSpeed: 1.5
+  movementSpinnerSpeed: -50
   takingAction: 0
 --- !u!114 &5565361203086327671
 MonoBehaviour:
@@ -281,6 +291,79 @@ MonoBehaviour:
     RefIds:
     - rid: -2
       type: {class: , ns: , asm: }
+--- !u!50 &7973046312720964029
+Rigidbody2D:
+  serializedVersion: 4
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1325864727565898748}
+  m_BodyType: 1
+  m_Simulated: 1
+  m_UseFullKinematicContacts: 0
+  m_UseAutoMass: 0
+  m_Mass: 1
+  m_LinearDrag: 0
+  m_AngularDrag: 0.05
+  m_GravityScale: 1
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_Interpolate: 0
+  m_SleepingMode: 1
+  m_CollisionDetection: 0
+  m_Constraints: 0
+--- !u!61 &2976946941211478906
+BoxCollider2D:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1325864727565898748}
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Density: 1
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_ForceSendLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_ForceReceiveLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_ContactCaptureLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_CallbackLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_IsTrigger: 0
+  m_UsedByEffector: 0
+  m_CompositeOperation: 0
+  m_CompositeOrder: 0
+  m_Offset: {x: 0, y: -0.030461788}
+  m_SpriteTilingProperty:
+    border: {x: 0, y: 0, z: 0, w: 0}
+    pivot: {x: 0, y: 0}
+    oldSize: {x: 0, y: 0}
+    newSize: {x: 0, y: 0}
+    adaptiveTilingThreshold: 0
+    drawMode: 0
+    adaptiveTiling: 0
+  m_AutoTiling: 0
+  m_Size: {x: 1, y: 0.9390764}
+  m_EdgeRadius: 0
 --- !u!1 &1720806109714009452
 GameObject:
   m_ObjectHideFlags: 0

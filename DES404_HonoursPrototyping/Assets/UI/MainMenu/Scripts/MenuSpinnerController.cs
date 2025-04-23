@@ -5,7 +5,7 @@ using UnityEngine;
 public class MenuSpinnerController : MonoBehaviour
 {
     public float orbitRadius = 140f;
-    public float spinSpeed = -60f;
+    public float spinSpeed;
 
     private float currentAngle = 0f;
     private RectTransform rectTransform;
@@ -22,12 +22,16 @@ public class MenuSpinnerController : MonoBehaviour
 
     void Start()
     {
+        spinSpeed = SettingsManager.instance.movementSpinnerSpeed;
+        
         rectTransform = GetComponent<RectTransform>();
         centerRect = transform.parent.GetComponent<RectTransform>();
     }
 
     void Update()
     {
+        UpdateSpinnerSpeed();
+        
         currentAngle += spinSpeed * Time.unscaledDeltaTime;
         float radians = currentAngle * Mathf.Deg2Rad;
 
@@ -63,5 +67,10 @@ public class MenuSpinnerController : MonoBehaviour
     public void ButtonPress()
     {
         currentButton?.Press();
+    }
+
+    private void UpdateSpinnerSpeed()
+    {
+        spinSpeed = SettingsManager.instance.movementSpinnerSpeed;
     }
 }

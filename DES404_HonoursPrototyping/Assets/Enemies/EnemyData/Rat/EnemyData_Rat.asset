@@ -13,8 +13,8 @@ MonoBehaviour:
   m_Name: EnemyData_Rat
   m_EditorClassIdentifier: 
   enemyName: Rat
-  maxHealth: 12
+  maxHealth: 9
   actionsPerTurn: 1
-  experienceToGive: 3
+  experienceToGive: 6
   minDamage: 1
   maxDamage: 5

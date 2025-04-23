@@ -67,6 +67,8 @@ public class PlayerController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        UpdateSpinnerSpeed();
+        
         if (!IsPlayerTurnAndReady())
         {
             DeactivateSpinnerAndHighlighter();
@@ -323,6 +325,11 @@ public class PlayerController : MonoBehaviour
     public void UpdateActionDots()
     {
         actionDots.SetActionDotCount(playerStats.ActionsPerTurn);
+    }
+
+    private void UpdateSpinnerSpeed()
+    {
+        movementSpinnerSpeed = SettingsManager.instance.movementSpinnerSpeed;
     }
 
     // ---CellInfo---

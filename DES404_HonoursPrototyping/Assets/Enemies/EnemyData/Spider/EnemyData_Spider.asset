@@ -15,5 +15,6 @@ MonoBehaviour:
   enemyName: Spider
   maxHealth: 14
   actionsPerTurn: 1
-  experienceToGive: 5
-  damageAmount: 5
+  experienceToGive: 8
+  minDamage: 1
+  maxDamage: 2

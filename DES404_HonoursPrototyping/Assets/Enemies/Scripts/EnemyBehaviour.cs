@@ -14,10 +14,13 @@ public abstract class EnemyBehaviour : MonoBehaviour
     protected PlayerStats playerStats;
 
     protected Vector3Int currentGridPosition;
-    [SerializeField] protected GameObject alertIcon;
-    [SerializeField] protected GameObject healthBar;
     protected bool inCombat = false;
     protected bool hasSeenPlayer = false;
+
+    [SerializeField] protected GameObject alertIcon;
+    [SerializeField] protected GameObject healthBar;
+    [SerializeField] protected GameObject projectilePrefab;
+    [SerializeField] protected float projectileSpeed = 5f;
 
     protected EnemyStats enemyStats;
 
@@ -97,6 +100,65 @@ public abstract class EnemyBehaviour : MonoBehaviour
         return Vector3Int.Distance(currentGridPosition, playerPos) == 1;
     }
 
+    protected IEnumerator MoveTowardsPlayer()
+    {
+        Vector3Int startPosition = currentGridPosition;
+        Vector3Int targetPosition = gridManager.grid.WorldToCell(playerController.transform.position);
+
+        List<Vector3Int> path = pathfinding.FindPath(startPosition, targetPosition);
+
+        if (path != null && path.Count > 0)
+        {
+            Vector3Int nextStep = path[0];
+
+            gridManager.SetTileAsOccupied(currentGridPosition, false);
+
+            if (gridManager.IsTileWalkable(nextStep) && !gridManager.IsTileOccupied(nextStep))
+            {
+                gridManager.SetTileAsOccupied(nextStep, true);
+
+                yield return MoveToNextTile(nextStep);
+            }
+            else
+            {
+                gridManager.SetTileAsOccupied(currentGridPosition, true);
+                Debug.Log("Next step is blocked!");
+            }
+        }
+        else
+        {
+            Debug.Log("No path to player!");
+        }
+    }
+
+    protected IEnumerator MoveAwayFromPlayer()
+    {
+        Vector3Int playerPosition = gridManager.grid.WorldToCell(playerController.transform.position);
+        Vector3Int bestEscapeTile = currentGridPosition;
+        int bestDistance = GetDistance(currentGridPosition, playerPosition);
+
+        foreach (Vector3Int dir in new Vector3Int[] { Vector3Int.up, Vector3Int.down, Vector3Int.left, Vector3Int.right, })
+        {
+            Vector3Int tileCandidate = currentGridPosition + dir;
+            if (!gridManager.IsTileWalkable(tileCandidate) || gridManager.IsTileOccupied(tileCandidate))
+                continue;
+
+            int distance = GetDistance(tileCandidate, playerPosition);
+            if (distance > bestDistance)
+            {
+                bestEscapeTile = tileCandidate;
+                bestDistance = distance;
+            }
+        }
+
+        if (bestEscapeTile != currentGridPosition)
+        {
+            gridManager.SetTileAsOccupied(currentGridPosition, false);
+            gridManager.SetTileAsOccupied(bestEscapeTile, true);
+            yield return MoveToNextTile(bestEscapeTile);
+        }
+    }
+
     protected IEnumerator MoveToNextTile(Vector3Int targetGridPosition)
     {
         Vector3 start = transform.position;
@@ -145,6 +207,30 @@ public abstract class EnemyBehaviour : MonoBehaviour
         transform.position = start;
     }
 
+    protected IEnumerator RangedAttack (Vector3 targetWorldPosition)
+    {
+        if (projectilePrefab == null) yield break;
+
+        Vector3 spawnPosition = transform.position;
+        Vector3 projectileDirection = (targetWorldPosition - spawnPosition).normalized;
+
+        GameObject projectile = Instantiate(projectilePrefab, spawnPosition, Quaternion.identity);
+        Rigidbody2D projectileRigidbody = projectile.GetComponent<Rigidbody2D>();
+        if (projectileRigidbody != null)
+        {
+            projectileRigidbody.velocity = projectileDirection * projectileSpeed;
+        }
+
+        EnemyProjectile projectileScript = projectile.GetComponent<EnemyProjectile>();
+        if (projectileScript != null)
+        {
+            projectileScript.SetProjectileDamage(enemyStats.GetDamageAmount());
+            projectileScript.SetOwner(gameObject);
+        }
+
+        yield return null;
+    }
+
         protected void DealDamage()
     {
         playerStats.TakeDamage(enemyStats.GetDamageAmount());
@@ -180,6 +266,11 @@ public abstract class EnemyBehaviour : MonoBehaviour
         }
 
         return false;
+    }
+
+    private int GetDistance(Vector3Int a, Vector3Int b)
+    {
+        return Mathf.Abs(a.x - b.x) + Mathf.Abs(a.y - b.y);
     }
 
     public bool InCombat => inCombat;

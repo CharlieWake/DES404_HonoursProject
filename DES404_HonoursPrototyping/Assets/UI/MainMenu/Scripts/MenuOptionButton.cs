@@ -58,18 +58,28 @@ public class MenuOptionButton : MonoBehaviour
                     break;
                 }                    
             case "SlowSpeed":
-                MenuSpinnerController.spinSpeed = -30f;
+                SettingsManager.instance.movementSpinnerSpeed = -30f;
                 break;
             case "NormalSpeed":
-                MenuSpinnerController.spinSpeed = -50f;
+                SettingsManager.instance.movementSpinnerSpeed = -50f;
                 break;
             case "FastSpeed":
-                MenuSpinnerController.spinSpeed = -70f;
+                SettingsManager.instance.movementSpinnerSpeed = -70f;
                 break;
             case "ReturnMainMenu":
-                spinnerSpeedCircle.gameObject.SetActive(false);
-                pauseMenuCircle.gameObject.SetActive(true);                
-                break;
+                if (SceneManager.GetActiveScene().name == "MainMenu")
+                {
+                    spinnerSpeedCircle.gameObject.SetActive(false);
+                    mainMenuCircle.gameObject.SetActive(true);                    
+                    break;
+                }
+                else
+                {
+                    spinnerSpeedCircle.gameObject.SetActive(false);
+                    pauseMenuCircle.gameObject.SetActive(true);
+                    break;
+                }
+
             case "QuitLevel":
                 UnityEngine.SceneManagement.SceneManager.LoadScene("MainMenu");
                 break;

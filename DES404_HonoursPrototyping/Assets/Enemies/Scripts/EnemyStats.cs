@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Rendering.Universal;
 
 public class EnemyStats : MonoBehaviour
 {
@@ -11,6 +12,7 @@ public class EnemyStats : MonoBehaviour
     GameObject floatingTextPrefab;
     FloatingHealthBar healthBar;
     GameObject expGemPrefab;
+    [SerializeField] private Light2D selfLight;
 
     [Header("Stats")]
     [SerializeField] private float currentHealth;
@@ -47,7 +49,8 @@ public class EnemyStats : MonoBehaviour
     {
         currentHealth = enemyData.maxHealth;
         healthBar.UpdateHealthBar(currentHealth, enemyData.maxHealth);
-        actionsPerTurn = enemyData.actionsPerTurn;        
+        actionsPerTurn = enemyData.actionsPerTurn;
+        // selfLight = GetComponentInChildren<Light>();
     }
 
     public void TakeDamage(float damageAmount)
@@ -108,14 +111,22 @@ public class EnemyStats : MonoBehaviour
     {
         float fadeElapsed = 0f;
         Color originalColor = spriteRenderer.color;
+        float initialLightIntensity = selfLight != null ? selfLight.intensity : 0f;
 
         while (fadeElapsed < fadeDuration)
         {
             fadeElapsed += Time.deltaTime;
-            float alpha = Mathf.Lerp(1f, 0f, fadeElapsed / fadeDuration);
+            float t = fadeElapsed / fadeDuration;
+
+            float alpha = Mathf.Lerp(1f, 0f, t);
             Color newColor = originalColor;
             newColor.a = alpha;
             spriteRenderer.color = newColor;
+
+            if (selfLight != null)
+            {
+                selfLight.intensity = Mathf.Lerp(initialLightIntensity, 0f, t);
+            }
 
             yield return null;
         }
@@ -124,6 +135,10 @@ public class EnemyStats : MonoBehaviour
         Color finalColor = originalColor;
         finalColor.a = 0f;
         spriteRenderer.color = finalColor;
+        if (selfLight != null)
+        {
+            selfLight.intensity = 0f;
+        }
     }
 
     public float GetDamageAmount()

@@ -100,7 +100,8 @@ public class PlayerStats : MonoBehaviour
 
     public void Heal(float healAmount)
     {
-        currentHealth = Mathf.Min(currentHealth, Mathf.Max(0, healAmount), maxHealth);
+        currentHealth += healAmount;
+        currentHealth = Mathf.Clamp(currentHealth, 0, maxHealth);
         UpdateUI();
     }
 
@@ -124,7 +125,7 @@ public class PlayerStats : MonoBehaviour
             playerLevel++;
             var newLevelInfo = playerLevelUpData.GetLevelInfo(playerLevel);
 
-            float healthGain = newLevelInfo.maxHealth = maxHealth;
+            float healthGain = newLevelInfo.maxHealth - maxHealth;
             maxHealth = newLevelInfo.maxHealth;
             Heal(healthGain);
 
