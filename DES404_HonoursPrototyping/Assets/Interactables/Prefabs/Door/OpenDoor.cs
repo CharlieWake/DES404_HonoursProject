@@ -1,0 +1,22 @@
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+using UnityEngine.Rendering.Universal;
+
+public class OpenDoor : MonoBehaviour
+{
+    [SerializeField] private Animator door1Animator;
+    [SerializeField] protected Animator door2Animator;
+
+    public IEnumerator PlayAnimationAndWait(string doorAnimationName1, string doorAnimationName2)
+    {
+        if (door1Animator != null)
+            door1Animator.Play(doorAnimationName1);
+
+        if (door2Animator != null)
+            door2Animator.Play(doorAnimationName2);
+
+        yield return new WaitForSeconds(4f);
+    }
+
+}

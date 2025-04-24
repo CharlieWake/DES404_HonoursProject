@@ -13,6 +13,7 @@ public class EnemyStats : MonoBehaviour
     FloatingHealthBar healthBar;
     GameObject expGemPrefab;
     [SerializeField] private Light2D selfLight;
+    [SerializeField] private GameObject itemToDrop;
 
     [Header("Stats")]
     [SerializeField] private float currentHealth;
@@ -91,7 +92,8 @@ public class EnemyStats : MonoBehaviour
     }
 
     IEnumerator DeathEvent()
-    {               
+    {
+        GetComponent<EnemyBehaviour>().UnregisterEnemy();
         yield return StartCoroutine(FadeOutEnemy(1f));
 
         Vector3 spawnPosition = Camera.main.WorldToScreenPoint(transform.position);
@@ -103,12 +105,18 @@ public class EnemyStats : MonoBehaviour
             yield return new WaitForSeconds(Random.Range(0.05f, 0.15f));
         }
 
-        GetComponent<EnemyBehaviour>().UnregisterEnemy();
+        if (itemToDrop != null)
+        {
+            Vector3 dropPosition = transform.position;
+            Instantiate(itemToDrop, dropPosition, Quaternion.identity);
+        }
+                
         Destroy(gameObject);
     }
 
     IEnumerator FadeOutEnemy(float fadeDuration)
     {
+        ShadowCaster2D shadowCaster2D = GetComponent<ShadowCaster2D>();
         float fadeElapsed = 0f;
         Color originalColor = spriteRenderer.color;
         float initialLightIntensity = selfLight != null ? selfLight.intensity : 0f;
@@ -130,14 +138,19 @@ public class EnemyStats : MonoBehaviour
 
             yield return null;
         }
-
         
         Color finalColor = originalColor;
         finalColor.a = 0f;
         spriteRenderer.color = finalColor;
+
         if (selfLight != null)
         {
             selfLight.intensity = 0f;
+        }
+
+        if (shadowCaster2D != null)
+        {
+            shadowCaster2D.enabled = false;
         }
     }
 

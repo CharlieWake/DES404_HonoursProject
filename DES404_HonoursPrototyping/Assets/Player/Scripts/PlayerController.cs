@@ -67,7 +67,10 @@ public class PlayerController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        UpdateSpinnerSpeed();
+        if (SettingsManager.instance != null)
+        {
+            UpdateSpinnerSpeed();
+        }
         
         if (!IsPlayerTurnAndReady())
         {
@@ -80,9 +83,9 @@ public class PlayerController : MonoBehaviour
         RotateSpinner();        
     }
     
-    private bool IsPlayerTurnAndReady()
+    public bool IsPlayerTurnAndReady()
     {
-        return TurnManager.instance.IsPlayerTurn() && !takingAction && !GameManager.instance.isGamePaused;
+        return TurnManager.instance.IsPlayerTurn() && !takingAction && !GameManager.instance.isGamePaused && playerStats.IsDead == false;
     }
 
     private void ActivateSpinnerAndHighlighter()
@@ -139,7 +142,7 @@ public class PlayerController : MonoBehaviour
 
     private void HandleInteractable(GameObject interactable)
     {
-        //Interact with Interactable Here
+        StartCoroutine(InteractWithInteractable(interactable));
     }
 
     IEnumerator MoveToTargetPosition(Vector3Int targetPosition)
@@ -227,6 +230,32 @@ public class PlayerController : MonoBehaviour
     }
 
     private void FinishPlayerAttack()
+    {
+        if (remainingActions > 0)
+        {
+            takingAction = false;
+        }
+        else
+        {
+            Invoke(nameof(EndPlayerTurn), 2f);
+        }
+    }
+
+    private IEnumerator InteractWithInteractable(GameObject interactable)
+    {
+        Debug.Log("I interact with " + interactable.name.ToString());
+        StartInteraction();
+        yield return StartCoroutine(interactable.GetComponent<Interactables>().Interact()); 
+        FinishInteraction();
+    }
+
+    private void StartInteraction()
+    {
+        takingAction = true;
+        UseAction();
+    }
+
+    private void FinishInteraction()
     {
         if (remainingActions > 0)
         {

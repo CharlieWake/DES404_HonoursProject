@@ -6,6 +6,7 @@ TagManager:
   tags:
   - Enemy
   - MenuButton
+  - DoorInteractable
   layers:
   - Default
   - TransparentFX

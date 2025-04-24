@@ -7,7 +7,6 @@ public class LevelUpTitleAnimator : MonoBehaviour
     private TMP_Text textComponent;
     private float jumpHeight = 10f;
     private float delay = 0.05f;
-    private float speed = 8f;
         
     [SerializeField] private float loopDelay;
 

@@ -191,6 +191,7 @@ MonoBehaviour:
   floatingTextPrefab: {fileID: 7987917236184173770, guid: ec9790c6f684cbe4786a840551fd2ce9, type: 3}
   playerCanvasName: PlayerCanvas
   healthBarObjectName: HealthBar
+  selfLight: {fileID: 3119240778565323890}
 --- !u!114 &714674007498013707
 MonoBehaviour:
   m_ObjectHideFlags: 0

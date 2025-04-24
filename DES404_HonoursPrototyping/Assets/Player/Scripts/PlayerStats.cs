@@ -3,10 +3,11 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
+using UnityEngine.Rendering.Universal;
 
 public class PlayerStats : MonoBehaviour
 {
-    [Header("Stat Data")]    
+    [Header("Stat Data")]
     [SerializeField] private PlayerLevelUpData playerLevelUpData;
 
     [Header("UI Elements")]
@@ -14,6 +15,7 @@ public class PlayerStats : MonoBehaviour
     [SerializeField] private Image experienceBar;
     [SerializeField] private TextMeshProUGUI healthText;
     [SerializeField] private LevelUpText levelUpText;
+    [SerializeField] private GameOver gameOverScreen;   
 
     [Header("FloatingDamageText")]
     [SerializeField] private GameObject floatingTextPrefab;
@@ -21,6 +23,7 @@ public class PlayerStats : MonoBehaviour
     [Header("Settings")]
     [SerializeField] private string playerCanvasName = "PlayerCanvas";
     [SerializeField] private string healthBarObjectName = "HealthBar";
+    [SerializeField] private Light2D selfLight;
 
     private PlayerController playerController;
     private SpriteRenderer spriteRenderer;
@@ -32,14 +35,16 @@ public class PlayerStats : MonoBehaviour
     private float currentExperience = 0f;
     private int playerLevel = 1;
     private int actionsPerTurn;
+    private bool isDead = false;
 
     // Read-Only Properties
     public int Level => playerLevel;
     public float Health => currentHealth;
     public int ActionsPerTurn => actionsPerTurn;
+    public bool IsDead => isDead;
 
     private void Awake()
-    {               
+    {
         spriteRenderer = GetComponentInChildren<SpriteRenderer>();
         playerController = GetComponent<PlayerController>();
         playerCanvas = transform.Find(playerCanvasName);
@@ -94,8 +99,8 @@ public class PlayerStats : MonoBehaviour
 
         if (currentHealth <= 0)
         {
-            HandleDeath();
-        }    
+            StartCoroutine(HandleDeath());
+        }
     }
 
     public void Heal(float healAmount)
@@ -116,8 +121,8 @@ public class PlayerStats : MonoBehaviour
         while (playerLevel < playerLevelUpData.maxLevel && currentExperience >= playerLevelUpData.GetLevelInfo(playerLevel).experienceToLevelUp)
         {
             var currentLevelInfo = playerLevelUpData.GetLevelInfo(playerLevel);
-            currentExperience -= currentLevelInfo.experienceToLevelUp;                      
-            
+            currentExperience -= currentLevelInfo.experienceToLevelUp;
+
             float oldMaxHealth = maxHealth;
             int oldActions = actionsPerTurn;
             int oldLevel = playerLevel;
@@ -133,13 +138,17 @@ public class PlayerStats : MonoBehaviour
 
             playerController.UpdateActionDots();
 
-            levelUpText.ShowLevelUpText(oldLevel, playerLevel, oldMaxHealth, maxHealth, oldActions, actionsPerTurn);            
+            levelUpText.ShowLevelUpText(oldLevel, playerLevel, oldMaxHealth, maxHealth, oldActions, actionsPerTurn);
         }
     }
 
-    private void HandleDeath()
+    private IEnumerator HandleDeath()
     {
         Debug.Log("Player Has Died.");
+        isDead = true;
+
+        yield return StartCoroutine(FadeOutPlayer(1f));
+        gameOverScreen.CallGameOverScreen();
     }
 
     IEnumerator DamageFlash()
@@ -166,7 +175,7 @@ public class PlayerStats : MonoBehaviour
         {
             shakerScript.TriggerShake(0.2f);
         }
-    }       
+    }
 
     private void UpdateUI()
     {
@@ -174,5 +183,45 @@ public class PlayerStats : MonoBehaviour
         healthBar.fillAmount = currentHealth / maxHealth;
         experienceBar.fillAmount = currentExperience / expToLevelUp;
         healthText.text = $"{Mathf.Ceil(currentHealth)} / {maxHealth}";
+    }
+
+    IEnumerator FadeOutPlayer(float fadeDuration)
+    {
+        ShadowCaster2D shadowCaster2D = GetComponent<ShadowCaster2D>();
+        float fadeElapsed = 0f;
+        Color originalColor = spriteRenderer.color;
+        float initialLightIntensity = selfLight != null ? selfLight.intensity : 0f;
+
+        while (fadeElapsed < fadeDuration)
+        {
+            fadeElapsed += Time.deltaTime;
+            float t = fadeElapsed / fadeDuration;
+
+            float alpha = Mathf.Lerp(1f, 0f, t);
+            Color newColor = originalColor;
+            newColor.a = alpha;
+            spriteRenderer.color = newColor;
+
+            if (selfLight != null)
+            {
+                selfLight.intensity = Mathf.Lerp(initialLightIntensity, 0f, t);
+            }
+
+            yield return null;
+        }
+
+        Color finalColor = originalColor;
+        finalColor.a = 0f;
+        spriteRenderer.color = finalColor;
+
+        if (selfLight != null)
+        {
+            selfLight.intensity = 0f;
+        }
+
+        if (shadowCaster2D != null)
+        {
+            shadowCaster2D.enabled = false;
+        }
     }
 }

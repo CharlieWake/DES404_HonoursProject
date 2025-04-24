@@ -1800,6 +1800,10 @@ PrefabInstance:
       propertyPath: m_fontColor32.rgba
       value: 4281808695
       objectReference: {fileID: 0}
+    - target: {fileID: 474342193139067706, guid: a809544f42ce8f04db46f83f8e54acb2, type: 3}
+      propertyPath: m_HorizontalAlignment
+      value: 2
+      objectReference: {fileID: 0}
     - target: {fileID: 3314946591072360476, guid: a809544f42ce8f04db46f83f8e54acb2, type: 3}
       propertyPath: optionName
       value: SpinnerSpeed

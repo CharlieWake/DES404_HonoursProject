@@ -17,6 +17,8 @@ public class TurnManager : MonoBehaviour
     private readonly List<EnemyBehaviour> enemies = new List<EnemyBehaviour>();
     public bool isPlayerTurn = true;
 
+    public CinemachineVirtualCamera VirtualCamera => virtualCamera;
+
     private void Awake()
     {
         if (instance != null && instance != this)
