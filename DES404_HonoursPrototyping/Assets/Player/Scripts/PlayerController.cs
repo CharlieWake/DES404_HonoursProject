@@ -85,7 +85,7 @@ public class PlayerController : MonoBehaviour
     
     public bool IsPlayerTurnAndReady()
     {
-        return TurnManager.instance.IsPlayerTurn() && !takingAction && !GameManager.instance.isGamePaused && playerStats.IsDead == false;
+        return TurnManager.instance.IsPlayerTurn() && !takingAction && !GameManager.instance.isGamePaused && playerStats.isDead == false;
     }
 
     private void ActivateSpinnerAndHighlighter()
@@ -368,30 +368,35 @@ public class PlayerController : MonoBehaviour
         gridPosition = floorTilemap.WorldToCell(spinnerPosition);
         Vector3Int playerPosition = floorTilemap.WorldToCell(transform.position);
 
-        List<Vector3Int> adjacentTiles = gridManager.getAdjacentTiles(playerPosition);
-        bool isAdjacent = adjacentTiles.Contains(gridPosition);
-
-        bool isWalkable = floorTilemap.HasTile(gridPosition) &&
-                          !decorTilemap.HasTile(gridPosition) &&
-                          isAdjacent;
+        bool isAdjacent = gridManager.IsTileAdjacent(playerPosition, gridPosition);
 
         GameObject enemy = null;
         GameObject interactable = null;
 
         if (isAdjacent)
         {
-            Collider2D enemyCollider = Physics2D.OverlapPoint(floorTilemap.GetCellCenterWorld(gridPosition), LayerMask.GetMask("Enemy"));
-            if (enemyCollider != null)
-            {
-                enemy = enemyCollider.gameObject;
-            }
+            Vector3 worldPos = floorTilemap.GetCellCenterWorld(gridPosition);
 
             Collider2D interactableCollider = Physics2D.OverlapPoint(floorTilemap.GetCellCenterWorld(gridPosition), LayerMask.GetMask("Interactable"));
             if (interactableCollider != null)
             {
                 interactable = interactableCollider.gameObject;
+                Debug.Log("An Interactable detected");
+            }
+
+            Collider2D enemyCollider = Physics2D.OverlapPoint(floorTilemap.GetCellCenterWorld(gridPosition), LayerMask.GetMask("Enemy"));
+            if (enemyCollider != null)
+            {
+                enemy = enemyCollider.gameObject;
+                Debug.Log("An enemy detected");
             }
         }
+
+        bool isWalkable = isAdjacent &&
+                          floorTilemap.HasTile(gridPosition) &&
+                          !decorTilemap.HasTile(gridPosition) &&
+                          interactable == null &&
+                          enemy == null;          
 
         return new CellInteractionInfo
         {

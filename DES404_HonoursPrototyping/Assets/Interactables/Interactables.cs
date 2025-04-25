@@ -6,10 +6,10 @@ using Cinemachine;
 
 public abstract class Interactables : MonoBehaviour
 {
-    [SerializeField] private Vector3Int interactablesPosition;
-    [SerializeField] private GameObject interactableSprite;
-    [SerializeField] private CinemachineVirtualCamera virtualCamera;
-    [SerializeField] private CinemachineBrain brain;
+    private Vector3Int interactablesPosition;
+    private GameObject interactableSprite;
+    private CinemachineVirtualCamera virtualCamera;
+    private CinemachineBrain brain;
 
     // Start is called before the first frame update
     void Start()

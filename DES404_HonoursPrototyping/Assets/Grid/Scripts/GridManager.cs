@@ -7,6 +7,7 @@ public class GridManager : MonoBehaviour
 {
     public Grid grid;
     private Tilemap floorTilemap;
+    private Tilemap decorTilemap;
     public Dictionary<Vector3Int, bool> walkableTiles = new Dictionary<Vector3Int, bool>();
     // Creates a new dictionary with two values to store a list of walkable tiles
     // The two values are a Vector3Int which will be the coordinates of the walkable tile
@@ -22,6 +23,7 @@ public class GridManager : MonoBehaviour
     void Start()
     {
         floorTilemap = GameManager.instance.FloorTilemap;
+        decorTilemap = GameManager.instance.DecorTilemap;
         InitializeGrid();
     }
 
@@ -34,7 +36,11 @@ public class GridManager : MonoBehaviour
         {
             if (floorTilemap.HasTile(tilePosition))
             {
-                walkableTiles[tilePosition] = true;
+                bool isBlockedByDecor = decorTilemap != null && decorTilemap.HasTile(tilePosition);
+                if (!isBlockedByDecor)
+                {
+                    walkableTiles[tilePosition] = true;
+                }
             }
         }
 
@@ -73,6 +79,25 @@ public class GridManager : MonoBehaviour
         // Then the list is checked to see if any of the tiles in those 4 directions aren't walkable 
         // If they are, they're removed from the list
         // The method then returns the list of remaining adjacent tiles
+    }
+
+    public bool IsTileAdjacent(Vector3Int origin, Vector3Int target)
+    {
+        Vector3Int[] offsets = new Vector3Int[]
+{
+        Vector3Int.up,
+        Vector3Int.down,
+        Vector3Int.left,
+        Vector3Int.right
+};
+
+        foreach (var offset in offsets)
+        {
+            if (origin + offset == target)
+                return true;
+        }
+
+        return false;
     }
 
     public void SetTileAsOccupied(Vector3Int tilePosition, bool isOccupied)

@@ -35,13 +35,12 @@ public class PlayerStats : MonoBehaviour
     private float currentExperience = 0f;
     private int playerLevel = 1;
     private int actionsPerTurn;
-    private bool isDead = false;
+    public bool isDead = false;
 
     // Read-Only Properties
     public int Level => playerLevel;
     public float Health => currentHealth;
     public int ActionsPerTurn => actionsPerTurn;
-    public bool IsDead => isDead;
 
     private void Awake()
     {

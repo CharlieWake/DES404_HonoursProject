@@ -5,6 +5,7 @@ using UnityEngine.Rendering.Universal;
 
 public class OpenDoor : MonoBehaviour
 {
+    [Header("Animators")]
     [SerializeField] private Animator door1Animator;
     [SerializeField] protected Animator door2Animator;
 
@@ -15,6 +16,12 @@ public class OpenDoor : MonoBehaviour
 
         if (door2Animator != null)
             door2Animator.Play(doorAnimationName2);
+
+        DoorInteractable doorInteractable = GetComponent<DoorInteractable>();
+        if (doorInteractable != null)
+        {
+            doorInteractable.isOpen = true;
+        }
 
         yield return new WaitForSeconds(4f);
     }
