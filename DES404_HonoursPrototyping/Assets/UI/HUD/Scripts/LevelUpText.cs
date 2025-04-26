@@ -21,8 +21,8 @@ public class LevelUpText : MonoBehaviour
         
         gameObject.SetActive(true);
 
-        statsText.text = $"Level: {oldLevel} > {newLevel}\n" +
-                         $"HP: {oldMaxHealth} > {newMaxHealth}\n" +
+        statsText.text = $"Level: {oldLevel} > {newLevel}\n\n" +
+                         $"HP: {oldMaxHealth} > {newMaxHealth}\n\n" +
                          $"Actions: {oldActions} > {newActions}";
 
         StartCoroutine(HidePanelDelay(3f));

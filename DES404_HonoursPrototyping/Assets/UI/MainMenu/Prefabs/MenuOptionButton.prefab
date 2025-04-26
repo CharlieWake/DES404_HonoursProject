@@ -319,7 +319,7 @@ RectTransform:
   m_GameObject: {fileID: 8240939050888061304}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1.3333333, y: 1.3333333, z: 1}
+  m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 7674728833553250961}
@@ -476,7 +476,7 @@ BoxCollider2D:
     drawMode: 0
     adaptiveTiling: 0
   m_AutoTiling: 0
-  m_Size: {x: 150, y: 150}
+  m_Size: {x: 175, y: 175}
   m_EdgeRadius: 0
 --- !u!50 &1331511079521929618
 Rigidbody2D:

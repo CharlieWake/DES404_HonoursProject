@@ -17,4 +17,4 @@ MonoBehaviour:
   actionsPerTurn: 1
   experienceToGive: 6
   minDamage: 1
-  maxDamage: 5
+  maxDamage: 4

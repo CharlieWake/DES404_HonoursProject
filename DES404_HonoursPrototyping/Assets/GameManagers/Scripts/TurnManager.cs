@@ -76,6 +76,15 @@ public class TurnManager : MonoBehaviour
 
         List<EnemyBehaviour> activeEnemies = enemies.FindAll(e => e != null && e.InCombat);
 
+        if (activeEnemies.Count > 0)
+        {
+            AudioManager.instance.PlayMusicByName("Audio/Music/Combat");
+        }
+        else
+        {
+            AudioManager.instance.PlayMusicByName("Audio/Music/Exploration");
+        }
+
         if (activeEnemies.Count == 0)
         {
             StartPlayerTurn();

@@ -10,27 +10,14 @@ public class MenuOptionButton : MonoBehaviour
     public string optionName;
     [SerializeField] private MenuSpinnerController MenuSpinnerController;
 
-    public Transform canvas;
-    public Transform mainMenuCircle;
-    public Transform spinnerSpeedCircle;
-    public Transform pauseMenuCircle;
+    [SerializeField] public Transform canvas;
+    [SerializeField] public Transform mainMenuCircle;
+    [SerializeField] public Transform spinnerSpeedPanel;
+    [SerializeField] public Transform pauseMenuPanel;
 
     private void Start()
-    {
-        
+    {       
 
-        if (SceneManager.GetActiveScene().name == "MainMenu")
-        {
-            canvas = GameObject.Find("MenuCanvas").transform;
-            mainMenuCircle = canvas.Find("MainMenuCircle");
-            spinnerSpeedCircle = canvas.Find("SpinnerSpeedCircle");
-        }
-        else
-        {
-            canvas = GameObject.Find("HUD").transform;
-            pauseMenuCircle = canvas.Find("PauseMenuPanel/PauseMenuCircle");
-            spinnerSpeedCircle = canvas.Find("SpinnerSpeedCircle");
-        }
     }
 
     public void Press()
@@ -39,6 +26,7 @@ public class MenuOptionButton : MonoBehaviour
         {
             case "Start":
                 UnityEngine.SceneManagement.SceneManager.LoadScene("Dungeon_1");
+                AudioManager.instance.PlayMusicByName("Audio/Music/Exploration");
                 break;
             case "Quit":
                 Application.Quit();
@@ -48,13 +36,13 @@ public class MenuOptionButton : MonoBehaviour
                 if (SceneManager.GetActiveScene().name == "MainMenu")
                 {
                     mainMenuCircle.gameObject.SetActive(false);
-                    spinnerSpeedCircle.gameObject.SetActive(true);
+                    spinnerSpeedPanel.gameObject.SetActive(true);
                     break;
                 }
                 else
                 {
-                    pauseMenuCircle.gameObject.SetActive(false);
-                    spinnerSpeedCircle.gameObject.SetActive(true);
+                    pauseMenuPanel.gameObject.SetActive(false);
+                    spinnerSpeedPanel.gameObject.SetActive(true);
                     break;
                 }                    
             case "SlowSpeed":
@@ -69,22 +57,25 @@ public class MenuOptionButton : MonoBehaviour
             case "ReturnMainMenu":
                 if (SceneManager.GetActiveScene().name == "MainMenu")
                 {
-                    spinnerSpeedCircle.gameObject.SetActive(false);
+                    spinnerSpeedPanel.gameObject.SetActive(false);
                     mainMenuCircle.gameObject.SetActive(true);                    
                     break;
                 }
                 else
                 {
-                    spinnerSpeedCircle.gameObject.SetActive(false);
-                    pauseMenuCircle.gameObject.SetActive(true);
+                    spinnerSpeedPanel.gameObject.SetActive(false);
+                    pauseMenuPanel.gameObject.SetActive(true);
                     break;
                 }
-
             case "QuitLevel":
                 UnityEngine.SceneManagement.SceneManager.LoadScene("MainMenu");
+                AudioManager.instance.PlayMusicByName("Audio/Music/MainMenu");
                 break;
             case "ResumeGame":
                 GameManager.instance.UnpauseGame();
+                break;
+            case "MuteUnmute":
+                AudioManager.instance.MuteAudio();
                 break;
             default:
                 Debug.LogWarning("Unknown menu option");

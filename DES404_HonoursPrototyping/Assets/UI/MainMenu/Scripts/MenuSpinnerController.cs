@@ -22,27 +22,40 @@ public class MenuSpinnerController : MonoBehaviour
 
     void Start()
     {
-        spinSpeed = SettingsManager.instance.movementSpinnerSpeed;
-        
+        if (SettingsManager.instance != null)
+        {
+            spinSpeed = SettingsManager.instance.movementSpinnerSpeed;
+        }
+        else
+        {
+            spinSpeed = -50f;
+        }
+      
         rectTransform = GetComponent<RectTransform>();
         centerRect = transform.parent.GetComponent<RectTransform>();
     }
 
     void Update()
     {
-        UpdateSpinnerSpeed();
-        
+        if (SettingsManager.instance != null)
+            UpdateSpinnerSpeed();
+
         currentAngle += spinSpeed * Time.unscaledDeltaTime;
         float radians = currentAngle * Mathf.Deg2Rad;
 
-        // Orbit position (around center)
+        // Orbit position (around shifted center)
         float x = Mathf.Cos(radians) * orbitRadius;
         float y = Mathf.Sin(radians) * orbitRadius;
 
-        rectTransform.anchoredPosition = new Vector2(x, y);
+        Vector2 offsetPosition = new Vector2(x, y - 110f);
+        Vector2 centerOffset = new Vector2(0f, -110f);
 
-        // Point outward from center
-        Vector2 directionFromCenter = rectTransform.anchoredPosition.normalized;
+        rectTransform.anchoredPosition = offsetPosition;
+
+        // Corrected direction
+        Vector2 directionFromCenter = offsetPosition - centerOffset;
+        directionFromCenter.Normalize();
+
         float angle = Mathf.Atan2(directionFromCenter.y, directionFromCenter.x) * Mathf.Rad2Deg;
         rectTransform.rotation = Quaternion.Euler(0f, 0f, angle + 90f);
     }

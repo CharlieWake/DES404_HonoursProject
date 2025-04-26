@@ -50,6 +50,8 @@ public class GameWin : MonoBehaviour
         }
 
         yield return new WaitForSeconds(returnToMenuDelay);
+        AudioManager.instance.PlayMusicByName("Audio/Music/MainMenu");
         UnityEngine.SceneManagement.SceneManager.LoadScene("MainMenu");
+
     }
 }
