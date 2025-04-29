@@ -14,6 +14,7 @@ public class EnemyStats : MonoBehaviour
     GameObject expGemPrefab;
     [SerializeField] private Light2D selfLight;
     [SerializeField] private GameObject itemToDrop;
+    [SerializeField] private AudioClip deathSFX;
 
     [Header("Stats")]
     [SerializeField] private float currentHealth;
@@ -69,6 +70,10 @@ public class EnemyStats : MonoBehaviour
     private void Death()
     {
         healthBar.gameObject.SetActive(false);
+        if (deathSFX != null)
+        {
+            AudioManager.instance.PlaySFX(deathSFX);
+        }
         StartCoroutine(DeathEvent());
         //GetComponent<EnemyBehaviour>().RemoveEnemy();
         // GameManager.instance.playerStats.AddExperience(enemyData.experienceToGive);

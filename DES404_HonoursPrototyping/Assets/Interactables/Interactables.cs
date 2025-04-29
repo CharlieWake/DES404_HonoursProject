@@ -14,10 +14,17 @@ public abstract class Interactables : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        interactablesPosition = GameManager.instance.FloorTilemap.WorldToCell(transform.position);
-        GameManager.instance.GridManager.SetTileAsOccupied(interactablesPosition, true);
+        if (GameManager.instance != null)
+        {
+            interactablesPosition = GameManager.instance.FloorTilemap.WorldToCell(transform.position);
+            GameManager.instance.GridManager.SetTileAsOccupied(interactablesPosition, true);
+        }
 
-        virtualCamera = TurnManager.instance.VirtualCamera;
+        if (TurnManager.instance != null)
+        {
+            virtualCamera = TurnManager.instance.VirtualCamera;
+        }
+
         brain = Camera.main.GetComponent<CinemachineBrain>();
 
         interactableSprite = transform.GetChild(0).gameObject;

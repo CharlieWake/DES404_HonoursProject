@@ -14,11 +14,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   levels:
   - experienceToLevelUp: 5
-    maxHealth: 20
+    maxHealth: 15
     actionsPerTurn: 1
   - experienceToLevelUp: 12
-    maxHealth: 25
+    maxHealth: 20
     actionsPerTurn: 1
   - experienceToLevelUp: 25
-    maxHealth: 30
+    maxHealth: 20
     actionsPerTurn: 2

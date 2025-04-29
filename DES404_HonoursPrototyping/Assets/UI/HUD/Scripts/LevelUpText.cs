@@ -20,6 +20,7 @@ public class LevelUpText : MonoBehaviour
         GameManager.instance.isGamePaused = true;
         
         gameObject.SetActive(true);
+        AudioManager.instance.PlaySFXByName("Audio/SFX/Level Up");
 
         statsText.text = $"Level: {oldLevel} > {newLevel}\n\n" +
                          $"HP: {oldMaxHealth} > {newMaxHealth}\n\n" +

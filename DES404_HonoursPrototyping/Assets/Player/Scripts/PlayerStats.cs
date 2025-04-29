@@ -89,6 +89,7 @@ public class PlayerStats : MonoBehaviour
         currentHealth -= damageAmount;
         currentHealth = Mathf.Max(currentHealth, 0);
 
+        PlayRandomDamageSFX();
         StartCoroutine(DamageFlash());
         ShowFloatingDamageText(damageAmount.ToString());
 
@@ -221,6 +222,21 @@ public class PlayerStats : MonoBehaviour
         if (shadowCaster2D != null)
         {
             shadowCaster2D.enabled = false;
+        }
+    }
+
+    private void PlayRandomDamageSFX()
+    {
+        int randomDamageSFX = Random.Range(0, 2);
+        if (randomDamageSFX == 0)
+        {
+            AudioManager.instance.PlaySFXByName("Audio/SFX/Hero-HurtMelee");
+            // Debug.Log("Hurt SFX 1");
+        }
+        else
+        {
+            AudioManager.instance.PlaySFXByName("Audio/SFX/Hero-HurtRanged");
+            // Debug.Log("Hurt SFX 2");
         }
     }
 }

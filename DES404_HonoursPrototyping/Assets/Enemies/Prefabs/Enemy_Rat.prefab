@@ -55,6 +55,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   enemyData: {fileID: 11400000, guid: 927f0024db0a7a045a5730fe1336b138, type: 2}
   selfLight: {fileID: 1230740560868927789}
+  itemToDrop: {fileID: 0}
+  deathSFX: {fileID: 8300000, guid: b82e61967f009a246be4717312f9202f, type: 3}
   currentHealth: 0
   actionsPerTurn: 1
 --- !u!114 &8384323062002602673
@@ -211,7 +213,12 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   alertIcon: {fileID: 5146736970006846346}
   healthBar: {fileID: 851120019768699536}
+  projectilePrefab: {fileID: 0}
+  projectileSpeed: 5
   sightRange: 5
+  alertSFX: {fileID: 8300000, guid: 34080d859d063ec4495efb52ea24f73b, type: 3}
+  attackSFX: {fileID: 8300000, guid: 423035fde29bb1643a971cc5441359cc, type: 3}
+  moveSFX: {fileID: 8300000, guid: 6b4d3917b5d09654b81561da35028c79, type: 3}
 --- !u!1 &851120019768699536
 GameObject:
   m_ObjectHideFlags: 0

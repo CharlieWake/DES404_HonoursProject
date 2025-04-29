@@ -14,6 +14,7 @@ public class MenuOptionButton : MonoBehaviour
     [SerializeField] public Transform mainMenuCircle;
     [SerializeField] public Transform spinnerSpeedPanel;
     [SerializeField] public Transform pauseMenuPanel;
+    [SerializeField] private GameObject confirmChoicePanel;
 
     private void Start()
     {       
@@ -22,11 +23,14 @@ public class MenuOptionButton : MonoBehaviour
 
     public void Press()
     {              
+        // AudioManager.instance.PlaySFXByName("Audio/SFX/")
+        
         switch (optionName)
         {
             case "Start":
                 UnityEngine.SceneManagement.SceneManager.LoadScene("Dungeon_1");
                 AudioManager.instance.PlayMusicByName("Audio/Music/Exploration");
+                AudioManager.instance.PlayAmbienceByName("Audio/SFX/Dungeon Ambience Loop");
                 break;
             case "Quit":
                 Application.Quit();
@@ -76,6 +80,20 @@ public class MenuOptionButton : MonoBehaviour
                 break;
             case "MuteUnmute":
                 AudioManager.instance.MuteAudio();
+                break;
+            case "ConfirmChoice":
+                if (confirmChoicePanel != null)
+                {
+                    confirmChoicePanel.SetActive(true);
+                    spinnerSpeedPanel.gameObject.SetActive(false);
+                }
+                break;
+            case "ReturnSplashScreen":
+                if (spinnerSpeedPanel != null)
+                {
+                    spinnerSpeedPanel.gameObject.SetActive(true);
+                    confirmChoicePanel.SetActive(false);
+                }
                 break;
             default:
                 Debug.LogWarning("Unknown menu option");

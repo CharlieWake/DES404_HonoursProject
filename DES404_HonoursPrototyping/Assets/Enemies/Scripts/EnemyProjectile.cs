@@ -31,6 +31,7 @@ public class EnemyProjectile : MonoBehaviour
         if (other.TryGetComponent<PlayerStats>(out PlayerStats player))
         {
             player.TakeDamage(damage);
+            AudioManager.instance.PlaySFXByName("Audio/SFX/Spider-AttackHit");
             Destroy(gameObject);
             return;
         }

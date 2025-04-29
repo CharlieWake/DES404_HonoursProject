@@ -8,6 +8,7 @@ public class OpenDoor : MonoBehaviour
     [Header("Animators")]
     [SerializeField] private Animator door1Animator;
     [SerializeField] protected Animator door2Animator;
+    [SerializeField] private float doorDelay;
 
     public IEnumerator PlayAnimationAndWait(string doorAnimationName1, string doorAnimationName2)
     {
@@ -23,7 +24,7 @@ public class OpenDoor : MonoBehaviour
             doorInteractable.isOpen = true;
         }
 
-        yield return new WaitForSeconds(4f);
+        yield return new WaitForSeconds(doorDelay);
     }
 
 }

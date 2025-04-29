@@ -149,6 +149,8 @@ public class PlayerController : MonoBehaviour
     {
         StartPlayerMovement();
 
+        AudioManager.instance.PlaySFXByName("Audio/SFX/Hero-Walk");
+
         yield return MoveToPositionRoutine(floorTilemap.GetCellCenterWorld(targetPosition));
 
         yield return new WaitForSeconds(0.5f);
@@ -203,6 +205,7 @@ public class PlayerController : MonoBehaviour
 
         yield return LerpPosition(originalPosition, attackPosition, 0.1f);
 
+        AudioManager.instance.PlaySFXByName("Audio/SFX/Hero-Hit");
         DealDamageToEnemy(enemy);
 
         yield return new WaitForSeconds(0.05f);

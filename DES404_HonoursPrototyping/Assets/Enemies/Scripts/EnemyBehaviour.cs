@@ -26,6 +26,10 @@ public abstract class EnemyBehaviour : MonoBehaviour
 
     [SerializeField] protected int sightRange = 5;
 
+    [SerializeField] protected AudioClip alertSFX;
+    [SerializeField] protected AudioClip attackSFX;
+    [SerializeField] protected AudioClip moveSFX;
+
     protected virtual void Awake()
     {
         enemyStats = GetComponent<EnemyStats>();
@@ -75,6 +79,7 @@ public abstract class EnemyBehaviour : MonoBehaviour
         if (alertIcon != null)
         {
             alertIcon.SetActive(true);
+            AudioManager.instance.PlaySFX(alertSFX);
         }
 
         yield return new WaitForSeconds(0.75f);
@@ -116,7 +121,10 @@ public abstract class EnemyBehaviour : MonoBehaviour
             if (gridManager.IsTileWalkable(nextStep) && !gridManager.IsTileOccupied(nextStep))
             {
                 gridManager.SetTileAsOccupied(nextStep, true);
-
+                if (moveSFX != null)
+                {
+                    AudioManager.instance.PlaySFX(moveSFX);
+                }
                 yield return MoveToNextTile(nextStep);
             }
             else
@@ -155,6 +163,10 @@ public abstract class EnemyBehaviour : MonoBehaviour
         {
             gridManager.SetTileAsOccupied(currentGridPosition, false);
             gridManager.SetTileAsOccupied(bestEscapeTile, true);
+            if (moveSFX != null)
+            {
+                AudioManager.instance.PlaySFX(moveSFX);
+            }
             yield return MoveToNextTile(bestEscapeTile);
         }
     }
@@ -194,6 +206,10 @@ public abstract class EnemyBehaviour : MonoBehaviour
         }
 
         DealDamage();
+        if (attackSFX != null)
+        {
+            AudioManager.instance.PlaySFX(attackSFX);
+        }
         transform.position = lungePosition;
         elapsed = 0f;
 
@@ -215,6 +231,10 @@ public abstract class EnemyBehaviour : MonoBehaviour
         Vector3 projectileDirection = (targetWorldPosition - spawnPosition).normalized;
 
         GameObject projectile = Instantiate(projectilePrefab, spawnPosition, Quaternion.identity);
+        if (attackSFX != null)
+        {
+            AudioManager.instance.PlaySFX(attackSFX);
+        }
         Rigidbody2D projectileRigidbody = projectile.GetComponent<Rigidbody2D>();
         if (projectileRigidbody != null)
         {

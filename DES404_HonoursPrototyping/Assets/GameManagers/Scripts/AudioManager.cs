@@ -12,11 +12,15 @@ public class AudioManager : MonoBehaviour
     private bool isPlayingA = true;
 
     public AudioSource sfxSource;
+    public AudioSource sfxAmbienceSource;
 
     [Header("Music Settings")]
     public float musicFadeDuration;
     public float musicVolume = 1f;
     public float sfxVolume = 1f;
+
+    private float oldMusicVolume = 0f;
+    private float oldSFXVolume = 0f;
 
     public bool audioMuted = false;
     public string currentTrack = "";
@@ -39,6 +43,7 @@ public class AudioManager : MonoBehaviour
         musicSourceA.volume = musicVolume;
         musicSourceB.volume = 0f;
         sfxSource.volume = sfxVolume;
+        sfxAmbienceSource.volume = sfxVolume;
 
         AudioClip mainMenuTrack = Resources.Load<AudioClip>("Audio/Music/MainMenu");
 
@@ -88,6 +93,33 @@ public class AudioManager : MonoBehaviour
         sfxSource.PlayOneShot(sfxClip);
     }
 
+    public void PlaySFXByName(string clipPath)
+    {
+        AudioClip sfxClip = Resources.Load<AudioClip>(clipPath);
+        if (sfxClip != null)
+        {
+            PlaySFX(sfxClip);
+        }
+        else
+        {
+            Debug.LogError("SFX clip not found at " + clipPath);
+        }
+    }
+
+    public void PlayAmbienceByName(string clipPath)
+    {
+        AudioClip ambienceClip = Resources.Load<AudioClip>(clipPath);
+        if (ambienceClip != null)
+        {
+            sfxAmbienceSource.clip = ambienceClip;
+            sfxAmbienceSource.Play();
+        }
+        else
+        {
+            Debug.LogError("Ambience clip not found at path: " + clipPath);
+        }
+    }
+
     public void PlayMusicByName(string clipPath)
     {
         if (currentTrack == clipPath) return;
@@ -117,20 +149,25 @@ public class AudioManager : MonoBehaviour
     {
         sfxVolume = volume;
         sfxSource.volume = volume;
+        sfxAmbienceSource.volume = volume;
     }
 
     public void MuteAudio()
     {
+        
+        
         if (audioMuted == false)
         {
+            oldMusicVolume = musicVolume;
+            oldSFXVolume = sfxVolume;
             SetMusicVolume(0f);
             SetSFXVolume(0f);
             audioMuted = true;
         }
         else
         {
-            SetMusicVolume(1f);
-            SetSFXVolume(1f);
+            SetMusicVolume(oldMusicVolume);
+            SetSFXVolume(oldSFXVolume);
             audioMuted = false;
         }
     }
