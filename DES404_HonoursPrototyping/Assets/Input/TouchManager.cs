@@ -42,7 +42,7 @@ public class TouchManager : MonoBehaviour
     {
         if (context.interaction is UnityEngine.InputSystem.Interactions.HoldInteraction)
         {
-            if (playerControllerScript.IsPlayerTurnAndReady() == true)
+            if (playerControllerScript.IsPlayerTurnAndReady() == true && SettingsManager.instance.pauseTutorialSeen == true)
             {
                 pauseCharging.StartHold();
             }            

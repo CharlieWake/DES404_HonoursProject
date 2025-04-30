@@ -53,10 +53,10 @@ public class MenuOptionButton : MonoBehaviour
                 SettingsManager.instance.movementSpinnerSpeed = -30f;
                 break;
             case "NormalSpeed":
-                SettingsManager.instance.movementSpinnerSpeed = -50f;
+                SettingsManager.instance.movementSpinnerSpeed = -70f;
                 break;
             case "FastSpeed":
-                SettingsManager.instance.movementSpinnerSpeed = -70f;
+                SettingsManager.instance.movementSpinnerSpeed = -90f;
                 break;
             case "ReturnMainMenu":
                 if (SceneManager.GetActiveScene().name == "MainMenu")

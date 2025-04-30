@@ -16,6 +16,8 @@ public class PauseCharging : MonoBehaviour
 
     private CanvasGroup canvasGroup;
 
+    [SerializeField] private PausingTutorial pauseTutorialPopup;
+
     private void Awake()
     {
         canvasGroup = GetComponent<CanvasGroup>();
@@ -71,6 +73,10 @@ public class PauseCharging : MonoBehaviour
     private void PauseGame()
     {
         GameManager.instance.PauseGame();
+        if (pauseTutorialPopup != null)
+        {
+            pauseTutorialPopup.FadeOutPopup();
+        }
     }
 
     IEnumerator FadeIn()

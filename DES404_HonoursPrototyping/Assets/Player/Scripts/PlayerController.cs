@@ -34,6 +34,7 @@ public class PlayerController : MonoBehaviour
     private Vector3Int gridPosition;
     private Vector3 spinnerStartPosition;
     private Quaternion spinnerStartRotation;
+    private Vector3Int lastActionDirection = Vector3Int.up;
 
     private void Start()
     {
@@ -105,8 +106,23 @@ public class PlayerController : MonoBehaviour
     {
         if (hasResetSpinner) return;
 
-        movementSpinner.transform.localPosition = spinnerStartPosition;
-        movementSpinner.transform.localRotation = spinnerStartRotation;
+        Vector3 direction = new Vector3(lastActionDirection.x, lastActionDirection.y).normalized;
+        float angleInDegrees = 45f;
+        float radians = angleInDegrees * Mathf.Deg2Rad;
+        float cos = Mathf.Cos(radians);
+        float sin = Mathf.Sin(radians);
+
+        // Apply 2D rotation around Z axis (only affects x and y)
+        float rotatedX = direction.x * cos - direction.y * sin;
+        float rotatedY = direction.x * sin + direction.y * cos;
+
+        Vector3 offsetDirection = new Vector3(rotatedX, rotatedY, 0).normalized;
+
+        // Set spinner local position
+        movementSpinner.transform.localPosition = offsetDirection;
+
+        float angle = Mathf.Atan2(lastActionDirection.y, lastActionDirection.x) * Mathf.Rad2Deg;
+        movementSpinner.transform.rotation = Quaternion.Euler(0f, 0f, angle + 135);
         hasResetSpinner = true;
     }
 
@@ -118,14 +134,17 @@ public class PlayerController : MonoBehaviour
 
         if (cellInfo.enemy != null)
         {
+            lastActionDirection = floorTilemap.WorldToCell(cellInfo.enemy.transform.position) - floorTilemap.WorldToCell(transform.position);
             HandleEnemyInteraction(cellInfo.enemy);
         }
         else if (cellInfo.interactable != null)
         {
+            lastActionDirection = floorTilemap.WorldToCell(cellInfo.interactable.transform.position) - floorTilemap.WorldToCell(transform.position);
             HandleInteractable(cellInfo.interactable);
         }
         else if (cellInfo.isWalkable)
         {
+            lastActionDirection = gridPosition - floorTilemap.WorldToCell(transform.position);
             StartCoroutine(MoveToTargetPosition(gridPosition));
         }          
     }

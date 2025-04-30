@@ -11,6 +11,7 @@ public class SplashScreen : MonoBehaviour
     [SerializeField] private GameObject spinnerPanel;
     [SerializeField] private GameObject spinnerObject;
     [SerializeField] private GameObject startGameButton;
+    [SerializeField] private TextMeshProUGUI startingText;
     [SerializeField] private OpenDoor openDoor;
 
     private bool tutorialStarted = false;
@@ -28,6 +29,7 @@ public class SplashScreen : MonoBehaviour
         {
             tutorialStarted = true;
             AudioManager.instance.PlayMusicByName("Audio/SFX/Dungeon Ambience Loop");
+            startingText.enabled = false;
             StartCoroutine(FadeImage());
         }
         else if (Input.anyKeyDown && tutorialStarted == true)

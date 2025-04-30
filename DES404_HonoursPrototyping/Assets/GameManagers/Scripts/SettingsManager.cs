@@ -7,7 +7,10 @@ public class SettingsManager : MonoBehaviour
 {
     public static SettingsManager instance;
 
-    public float movementSpinnerSpeed = -50f;
+    public float movementSpinnerSpeed = -70f;
+
+    public bool pauseTutorialSeen = false;
+    public bool interactTutorialSeen = false;
 
     private void Awake()
     {

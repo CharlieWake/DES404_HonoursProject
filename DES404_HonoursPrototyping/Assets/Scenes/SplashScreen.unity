@@ -386,11 +386,6 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 549a2e9f180aab443a8b07376f379059, type: 3}
---- !u!224 &696254334 stripped
-RectTransform:
-  m_CorrespondingSourceObject: {fileID: 811602927379393673, guid: 786d7462a1f3c5d4285b41318f341b28, type: 3}
-  m_PrefabInstance: {fileID: 4953496227492932252}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &718474644
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -8071,6 +8066,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 7524782321807359681, guid: b5c2e67711276714ca1b3725c8d0d824, type: 3}
+      propertyPath: movementSpinnerSpeed
+      value: -70
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -8138,11 +8137,6 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 549a2e9f180aab443a8b07376f379059, type: 3}
---- !u!1 &1861965802 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 3257672729972267605, guid: 786d7462a1f3c5d4285b41318f341b28, type: 3}
-  m_PrefabInstance: {fileID: 4953496227492932252}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &1901616194
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -8378,9 +8372,9 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
-    - target: {fileID: 719584583741806521, guid: 786d7462a1f3c5d4285b41318f341b28, type: 3}
-      propertyPath: m_IsActive
-      value: 0
+    - target: {fileID: 1406869124986844948, guid: 786d7462a1f3c5d4285b41318f341b28, type: 3}
+      propertyPath: spinSpeed
+      value: -70
       objectReference: {fileID: 0}
     - target: {fileID: 1553226107393932892, guid: 786d7462a1f3c5d4285b41318f341b28, type: 3}
       propertyPath: m_Name
@@ -8390,18 +8384,6 @@ PrefabInstance:
       propertyPath: openDoor
       value: 
       objectReference: {fileID: 1250761381}
-    - target: {fileID: 4522709948368400215, guid: 786d7462a1f3c5d4285b41318f341b28, type: 3}
-      propertyPath: confirmChoicePanel
-      value: 
-      objectReference: {fileID: 1861965802}
-    - target: {fileID: 6278029826238157017, guid: 786d7462a1f3c5d4285b41318f341b28, type: 3}
-      propertyPath: spinnerSpeedPanel
-      value: 
-      objectReference: {fileID: 696254334}
-    - target: {fileID: 6278029826238157017, guid: 786d7462a1f3c5d4285b41318f341b28, type: 3}
-      propertyPath: confirmChoicePanel
-      value: 
-      objectReference: {fileID: 1861965802}
     - target: {fileID: 7336175118281155209, guid: 786d7462a1f3c5d4285b41318f341b28, type: 3}
       propertyPath: m_Pivot.x
       value: 0
