@@ -10,6 +10,7 @@ public class KeyInteractable : Interactables
     {
         FindTargetDoor();
 
+        AudioManager.instance.PlaySFXByName("Audio/SFX/Key Pickup");
         HideInteractable();
 
         yield return new WaitForSeconds(0.5f);

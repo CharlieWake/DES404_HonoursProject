@@ -28,6 +28,7 @@ public class SplashScreen : MonoBehaviour
         if (Input.anyKeyDown && tutorialStarted == false)
         {
             tutorialStarted = true;
+            AudioManager.instance.PlaySFXByName("Audio/SFX/UI-SelectPause");
             AudioManager.instance.PlayMusicByName("Audio/SFX/Dungeon Ambience Loop");
             startingText.enabled = false;
             StartCoroutine(FadeImage());
@@ -40,6 +41,8 @@ public class SplashScreen : MonoBehaviour
 
     private IEnumerator FadeImage()
     {
+        yield return new WaitForSeconds(1f);
+        
         yield return openDoor.PlayAnimationAndWait("OpenDoor1", "OpenDoor2");
 
         yield return new WaitForSeconds(2f);

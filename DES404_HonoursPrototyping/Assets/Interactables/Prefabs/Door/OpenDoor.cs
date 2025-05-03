@@ -12,6 +12,8 @@ public class OpenDoor : MonoBehaviour
 
     public IEnumerator PlayAnimationAndWait(string doorAnimationName1, string doorAnimationName2)
     {
+        AudioManager.instance.PlaySFXByName("Audio/SFX/Door Open");
+
         if (door1Animator != null)
             door1Animator.Play(doorAnimationName1);
 

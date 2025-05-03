@@ -72,6 +72,7 @@ public class PauseCharging : MonoBehaviour
 
     private void PauseGame()
     {
+        AudioManager.instance.PlaySFXByName("Audio/SFX/UI-SelectPause");
         GameManager.instance.PauseGame();
         if (pauseTutorialPopup != null)
         {
